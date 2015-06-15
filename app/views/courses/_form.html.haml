@@ -1,0 +1,19 @@
+= form_for @course do |f|
+  - if @course.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@course.errors.count, "error")} prohibited this course from being saved:"
+      %ul
+        - @course.errors.full_messages.each do |msg|
+          %li= msg
+
+  = f.label :name
+  = f.text_field :name
+
+  = f.label :year
+  = f.text_field :year
+  %h2 Group
+  = f.fields_for :groups do |g_form|
+    =render partial: 'groups/form', locals: { f: g_form }
+
+  .actions
+    = f.submit 'Save'
