@@ -5,15 +5,36 @@
       %ul
         - @course.errors.full_messages.each do |msg|
           %li= msg
+  .row
+    .six.columns
+      = f.label :name
+      = f.text_field :name, class: "u-full-width"
+    .three.columns
+      = f.label :year
+      = f.text_field :year, class: "u-full-width"
+    .three.columns
+      = f.label :semester
+      = f.select :semester, options_for_select([['Sommer', 'SS'], ['Winter', 'WS']]), {}, class: "u-full-width"
+  = f.label :description
+  = f.text_area :description, class: "u-full-width"
+  %p
+    Please specify what options the students have in choosing groups:
 
-  = f.label :name
-  = f.text_field :name
-
-  = f.label :year
-  = f.text_field :year
-  %h2 Group
-  = f.fields_for :groups do |g_form|
-    =render partial: 'groups/form', locals: { f: g_form }
-
-  .actions
+  #groups
+    %table.u-full-width
+      %thead
+        %tr
+          %th
+            Name
+          %th
+            Min Size
+          %th
+            Max Size
+          %th
+            Description
+          %th
+      %tbody#groups
+        = f.fields_for :groups do |g_form|
+          = render partial: 'groups/form', locals: { f: g_form }
+    = link_to "Add Group", '#',{:'data-target' => 'tbody#groups', class: ' add_fields button button-primary'}
     = f.submit 'Save'

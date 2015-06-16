@@ -1,2 +1,12 @@
-= f.label :name
-= f.text_field :name
+%tr
+  %td
+    = f.text_field :name, class: "u-full-width"
+  %td
+    = f.number_field :minsize, class: "u-full-width"
+  %td
+    = f.number_field :maxsize, class: "u-full-width"
+  %td
+    = f.text_area :description, class: "u-full-width"
+  %td
+    = link_to "X", '#',{class: 'button btn-danger remove_fields'}
+    = f.hidden_field :_destroy

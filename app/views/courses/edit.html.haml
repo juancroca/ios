@@ -1,7 +1,9 @@
-%h1 Editing course
-
-= render 'form'
-
-= link_to 'Show', @course
-\|
-= link_to 'Back', courses_path
+.container
+  %h2
+    =@course.name
+  %p
+    Changes you make on this page will
+    %strong
+      not
+    affect your ISIS course.
+  = render 'form'
