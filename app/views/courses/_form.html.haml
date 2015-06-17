@@ -13,10 +13,10 @@
   = f.text_area :description, class: "u-full-width"
   %p
     Please specify what options the students have in choosing groups:
-  = f.fields_for :preferences, OpenStruct.new(f.object.preferences) do |p_form|
+  = f.fields_for :preferences, f.object.preferences do |p_form|
     .row
       = p_form.label :preferences, class: 'switch' do
-        = p_form.check_box :preferences, {class: "switch-input"}
+        = p_form.check_box :preferences, {class: "switch-input"}, "true", "false"
         %span{class: "switch-label", 'data-on': "On", 'data-off': "Off"}
         %span.switch-handle
       %strong
@@ -25,7 +25,7 @@
 
     .row
       = p_form.label :friends, class: 'switch' do
-        = p_form.check_box :friends, {class: "switch-input"}
+        = p_form.check_box :friends, {class: "switch-input"}, "true", "false"
         %span{class: "switch-label", 'data-on': "On", 'data-off': "Off"}
         %span.switch-handle
       %strong
@@ -34,7 +34,7 @@
 
     .row
       = p_form.label :diverse, class: 'switch' do
-        = p_form.check_box :diverse, {class: "switch-input"}
+        = p_form.check_box :diverse, {class: "switch-input"}, "true", "false"
         %span{class: "switch-label", 'data-on': "On", 'data-off': "Off"}
         %span.switch-handle
       %strong
@@ -43,7 +43,7 @@
 
     .row
       = p_form.label :compulsory, class: 'switch' do
-        = p_form.check_box :compulsory, {class: "switch-input"}
+        = p_form.check_box :compulsory, {class: "switch-input"}, "true", "false"
         %span{class: "switch-label", 'data-on': "On", 'data-off': "Off"}
         %span.switch-handle
       %strong
@@ -65,5 +65,5 @@
       %tbody#groups
         = f.fields_for :groups do |g_form|
           = render partial: 'groups/form', locals: { f: g_form }
-    = link_to "Add Group", '#',{:'data-target' => 'tbody#groups', 'data-element' => 'tr', class: ' add_fields button button-primary'}
-    = f.submit 'Save'
+  = link_to "Add Group", '#',{:'data-target' => 'tbody#groups', 'data-element' => 'tr', class: ' add_fields button button-primary'}
+  = f.submit 'Save'

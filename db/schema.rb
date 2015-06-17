@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150615192448) do
+ActiveRecord::Schema.define(version: 20150617200145) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,6 +29,14 @@ ActiveRecord::Schema.define(version: 20150615192448) do
     t.datetime "updated_at",                          null: false
   end
 
+  create_table "courses_skills", force: :cascade do |t|
+    t.integer "course_id"
+    t.integer "skill_id"
+  end
+
+  add_index "courses_skills", ["course_id"], name: "index_courses_skills_on_course_id", using: :btree
+  add_index "courses_skills", ["skill_id"], name: "index_courses_skills_on_skill_id", using: :btree
+
   create_table "groups", force: :cascade do |t|
     t.string   "name"
     t.integer  "course_id",               null: false
@@ -40,6 +48,14 @@ ActiveRecord::Schema.define(version: 20150615192448) do
     t.datetime "updated_at",              null: false
   end
 
+  create_table "groups_skills", force: :cascade do |t|
+    t.integer "group_id"
+    t.integer "skill_id"
+  end
+
+  add_index "groups_skills", ["group_id"], name: "index_groups_skills_on_group_id", using: :btree
+  add_index "groups_skills", ["skill_id"], name: "index_groups_skills_on_skill_id", using: :btree
+
   create_table "groups_users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -47,12 +63,34 @@ ActiveRecord::Schema.define(version: 20150615192448) do
     t.integer  "user_id",    null: false
   end
 
-  create_table "student_courses", force: :cascade do |t|
+  create_table "registrations", force: :cascade do |t|
+    t.text     "friend_ids"
+    t.text     "groups"
+    t.boolean  "compulsory"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer  "course_id",  null: false
     t.integer  "user_id",    null: false
   end
+
+  create_table "skill_scores", force: :cascade do |t|
+    t.integer  "registration_id"
+    t.integer  "skill_id"
+    t.integer  "score",           default: 0
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+  end
+
+  add_index "skill_scores", ["registration_id"], name: "index_skill_scores_on_registration_id", using: :btree
+  add_index "skill_scores", ["skill_id"], name: "index_skill_scores_on_skill_id", using: :btree
+
+  create_table "skills", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "skills", ["name"], name: "index_skills_on_name", using: :btree
 
   create_table "supervisor_courses", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -64,14 +102,12 @@ ActiveRecord::Schema.define(version: 20150615192448) do
   create_table "users", force: :cascade do |t|
     t.string   "name"
     t.integer  "isis_id"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
-    t.string   "email",                  default: "", null: false
-    t.string   "encrypted_password",     default: "", null: false
-    t.string   "reset_password_token"
-    t.datetime "reset_password_sent_at"
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
+    t.string   "email",               default: "", null: false
+    t.string   "encrypted_password",  default: "", null: false
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,  null: false
+    t.integer  "sign_in_count",       default: 0,  null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.inet     "current_sign_in_ip"
@@ -79,12 +115,13 @@ ActiveRecord::Schema.define(version: 20150615192448) do
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
   add_foreign_key "groups_users", "groups"
   add_foreign_key "groups_users", "users"
-  add_foreign_key "student_courses", "courses"
-  add_foreign_key "student_courses", "users"
+  add_foreign_key "registrations", "courses"
+  add_foreign_key "registrations", "users"
+  add_foreign_key "skill_scores", "registrations"
+  add_foreign_key "skill_scores", "skills"
   add_foreign_key "supervisor_courses", "courses"
   add_foreign_key "supervisor_courses", "users"
 end

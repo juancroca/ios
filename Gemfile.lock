@@ -85,6 +85,8 @@ GEM
       nokogiri (>= 1.5.9)
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
+    migration_data (0.0.4)
+      rails (>= 4.0.0.rc1)
     mime-types (2.6.1)
     mini_portile (0.6.2)
     minitest (5.7.0)
@@ -171,6 +173,7 @@ DEPENDENCIES
   haml
   jbuilder (~> 2.0)
   jquery-rails
+  migration_data
   pg
   rails (= 4.2.1)
   sass-rails (~> 5.0)

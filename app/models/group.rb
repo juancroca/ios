@@ -1,6 +1,7 @@
 class Group < ActiveRecord::Base
   has_and_belongs_to_many :users
   belongs_to :course
+  has_and_belongs_to_many :skills
 
   validates :name, presence: true
   validates :minsize, :maxsize, numericality: { only_integer: true, greater_than: 0}

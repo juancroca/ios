@@ -1,0 +1,53 @@
+= form_for [:course, @registration], validate: true do |f|
+  -if @registration.course.skills
+    .row
+      %h5 Skills
+      %p Please rank yourself on the following topics, 1 having no experience and 10 being very experienced
+      - f.fields_for :skill_scores do |ss_form|
+        aa
+        .row
+          .three.columns
+            = ss_form.object.skill.name
+          .three.columns
+            = ss_form.hidden_field :skill_id
+            = ss_form.number_field :score
+  - if @registration.course.preferences.compulsory
+    %h5 Your study
+    .row
+      .six.columns
+        = f.label :compulsory
+        = f.select :compulsory, options_for_select([['no', false], ['yes', true]])
+
+
+  -if @registration.course.preferences.preferences
+    %h5 Preferred topics
+    .row
+      Please select the order of preference of the topics.
+    - f.fields_for :groups do |p_form|
+      - @registration.course.groups do |group|
+        .row
+          .three.columns
+            = label_tag group.name
+          .three.columns
+            = p_form.collection_select :id, @registration.course.groups, :id, :name
+    .row
+      .twelve.columns
+        %p Please select each group exactly once
+
+
+  -if @registration.course.preferences.friends
+    %h5 Preferred partners
+    .row
+      .twelve.columns
+        %p
+          If there is anyone you would like to work with, you can select them from this list to increase your chances of sharing a group.
+    .row
+      .six.columns
+        = f.collection_select :friend_ids, @registration.course.students, :id, :name
+
+      .row
+        .twelve.columns
+          %p
+            Anyone missing? This list only shows students enrolled in this course. If your friends are missing from the list, you can check back later and add them.
+
+  = f.submit 'Save'

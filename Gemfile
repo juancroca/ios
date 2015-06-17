@@ -24,7 +24,7 @@ gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'haml'
 gem 'client_side_validations', github: 'DavyJonesLocker/client_side_validations', branch: '4-2-stable'
-
+gem 'migration_data'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 

@@ -10,17 +10,23 @@ class CoursesController < ApplicationController
   def edit
   end
 
+  # PATCH/PUT /registrations/1
+  # PATCH/PUT /registrations/1.json
   def update
-    if @course.update(course_params)
-      redirect_to @course
-    else
-      render :edit
+    respond_to do |format|
+      if @course.update(course_params)
+        format.html { redirect_to @course, notice: 'Class was successfully updated.' }
+        format.json { render :show, status: :ok, location: @course }
+      else
+        format.html { render :edit }
+        format.json { render json: @course.errors, status: :unprocessable_entity }
+      end
     end
   end
 
   private
   def load_supervisor_course
-    @course = current_user.supervising.find(params[:id])
+    @course = current_supervisor.supervising.find(params[:id])
     if @course.nil?
       return redirect_to root_path
     end
