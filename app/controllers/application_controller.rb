@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   end
 
   def supervisor_signed_in?
-    user_signed_in? && user_session[:supervisor]
+    user_signed_in? && user_session["supervisor"]
   end
 
   def current_supervisor
@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
   end
 
   def student_signed_in?
-    user_signed_in? && !user_session[:supervisor]
+    user_signed_in? && !user_session["supervisor"]
   end
 
   def current_student

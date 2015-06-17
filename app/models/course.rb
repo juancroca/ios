@@ -6,4 +6,13 @@ class Course < ActiveRecord::Base
   has_many :supervisors, through: :supervisor_courses, source: :user
 
   accepts_nested_attributes_for :groups, :reject_if => :all_blank, :allow_destroy => true
+
+  validates_associated :groups
+
+  validates :isis_id, numericality: true
+  validates :year, numericality: true, on: :update
+  validates :name, :semester, presence: true, on: :update
+
+  serialize :preferences, Hash
+
 end

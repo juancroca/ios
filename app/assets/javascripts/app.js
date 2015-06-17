@@ -2,7 +2,8 @@ function ready() {
   var uniqueId = 1;
   $('.add_fields').click(function() {
     var target = $(this).data("target");
-    var new_table_row = $(target + ' tr:last').clone();
+    var element = $(this).data("element");
+    var new_table_row = $(target + ' ' + element + ':last').clone();
     new_table_row.show();
     var new_id = new Date().getTime() + (uniqueId++);
     new_table_row.find("input, select, textarea").each(function () {

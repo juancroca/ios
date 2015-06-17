@@ -1,10 +1,4 @@
-= form_for @course do |f|
-  - if @course.errors.any?
-    #error_explanation
-      %h2= "#{pluralize(@course.errors.count, "error")} prohibited this course from being saved:"
-      %ul
-        - @course.errors.full_messages.each do |msg|
-          %li= msg
+= form_for @course, validate: true do |f|
   .row
     .six.columns
       = f.label :name
@@ -19,7 +13,42 @@
   = f.text_area :description, class: "u-full-width"
   %p
     Please specify what options the students have in choosing groups:
+  = f.fields_for :preferences, OpenStruct.new(f.object.preferences) do |p_form|
+    .row
+      = p_form.label :preferences, class: 'switch' do
+        = p_form.check_box :preferences, {class: "switch-input"}
+        %span{class: "switch-label", 'data-on': "On", 'data-off': "Off"}
+        %span.switch-handle
+      %strong
+        Enable topic preferences:
+      enable choosing specific groups.
 
+    .row
+      = p_form.label :friends, class: 'switch' do
+        = p_form.check_box :friends, {class: "switch-input"}
+        %span{class: "switch-label", 'data-on': "On", 'data-off': "Off"}
+        %span.switch-handle
+      %strong
+        Preferred partners:
+      enabling this allows students to specify their preferred team members.
+
+    .row
+      = p_form.label :diverse, class: 'switch' do
+        = p_form.check_box :diverse, {class: "switch-input"}
+        %span{class: "switch-label", 'data-on': "On", 'data-off': "Off"}
+        %span.switch-handle
+      %strong
+        Maximize diversity:
+      attempt to create very diverse groups. When disabled, groups will be as evenly skilled as possible.
+
+    .row
+      = p_form.label :compulsory, class: 'switch' do
+        = p_form.check_box :compulsory, {class: "switch-input"}
+        %span{class: "switch-label", 'data-on': "On", 'data-off': "Off"}
+        %span.switch-handle
+      %strong
+        Compulsory attendance:
+      adds support for a group of students that must be assigned to a group (i.e. not the waitinglist).
   #groups
     %table.u-full-width
       %thead
@@ -36,5 +65,5 @@
       %tbody#groups
         = f.fields_for :groups do |g_form|
           = render partial: 'groups/form', locals: { f: g_form }
-    = link_to "Add Group", '#',{:'data-target' => 'tbody#groups', class: ' add_fields button button-primary'}
+    = link_to "Add Group", '#',{:'data-target' => 'tbody#groups', 'data-element' => 'tr', class: ' add_fields button button-primary'}
     = f.submit 'Save'

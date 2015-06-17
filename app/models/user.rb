@@ -8,4 +8,8 @@ class User < ActiveRecord::Base
   has_many :supervisor_courses
   has_many :attending, through: :student_courses, source: :course
   has_many :supervising, through: :supervisor_courses, source: :course
+
+
+  validates :name, presence: true
+  
 end

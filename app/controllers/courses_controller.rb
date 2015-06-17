@@ -1,5 +1,5 @@
 class CoursesController < ApplicationController
-  before_filter :authenticate_user!
+  before_filter :authenticate_supervisor!, only: [:edit, :update]
   before_filter :load_supervisor_course, only: [:edit, :update, :show]
   before_filter :load_group, only: [:edit]
 
@@ -14,7 +14,6 @@ class CoursesController < ApplicationController
     if @course.update(course_params)
       redirect_to @course
     else
-      load_group
       render :edit
     end
   end
@@ -32,7 +31,7 @@ class CoursesController < ApplicationController
   end
 
   def course_params
-    params.require(:course).permit(:name, :semester, :description, :year, :enrollment_deadline,
+    params.require(:course).permit(:name, :semester, :description, :year, :enrollment_deadline, preferences: [:preferences, :friends, :diverse, :compulsory],
                                     groups_attributes: [:id, :name, :minsize, :maxsize, :description, :_destroy])
   end
 end
