@@ -6,6 +6,7 @@ class Registration < ActiveRecord::Base
   accepts_nested_attributes_for :skill_scores, :reject_if => :all_blank
 
   serialize :groups, Hash
+  serialize :friend_ids, Array
 
   def groups
     OpenStruct.new(self[:groups].as_json)

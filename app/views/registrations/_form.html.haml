@@ -1,10 +1,9 @@
-= form_for [:course, @registration], validate: true do |f|
+= form_for [@course, @registration], validate: true do |f|
   -if @registration.course.skills
     .row
       %h5 Skills
       %p Please rank yourself on the following topics, 1 having no experience and 10 being very experienced
-      - f.fields_for :skill_scores do |ss_form|
-        aa
+      = f.fields_for :skill_scores do |ss_form|
         .row
           .three.columns
             = ss_form.object.skill.name
@@ -23,13 +22,13 @@
     %h5 Preferred topics
     .row
       Please select the order of preference of the topics.
-    - f.fields_for :groups do |p_form|
-      - @registration.course.groups do |group|
+    = f.fields_for :groups do |p_form|
+      - @registration.course.groups.each_with_index do |group, index|
         .row
           .three.columns
-            = label_tag group.name
+            = label_tag
           .three.columns
-            = p_form.collection_select :id, @registration.course.groups, :id, :name
+            = p_form.collection_select 'id', @registration.course.groups, :id, :name, {}, {index: index}
     .row
       .twelve.columns
         %p Please select each group exactly once
@@ -43,7 +42,8 @@
           If there is anyone you would like to work with, you can select them from this list to increase your chances of sharing a group.
     .row
       .six.columns
-        = f.collection_select :friend_ids, @registration.course.students, :id, :name
+        %select{name: "registration[friend_ids][]", id: "registration_friend_ids_id"}
+          = options_from_collection_for_select(@registration.course.students, :id, :name)
 
       .row
         .twelve.columns
