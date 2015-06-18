@@ -27,10 +27,8 @@ class RegistrationsController < ApplicationController
   # POST /registrations
   # POST /registrations.json
   def create
-    byebug
     @registration = current_student.registrations.build(registration_params)
     @registration.course = @course
-    byebug
     respond_to do |format|
       if @registration.save
         format.html { redirect_to [@course, @registration], notice: 'Registration was successfully created.' }
