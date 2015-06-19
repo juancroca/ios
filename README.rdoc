@@ -1,16 +1,13 @@
 == README
 
 To run in Docker compose, do:
-```
-$ docker-compose build
-$ docker-compose up
-```
+
+    $ docker-compose build
+    $ docker-compose up
 
 When the database is up, run (in a separate window)
 
-```
-$ docker-compose run web rake db:create
-$ docker-compose run web rake db:migrate
-```
+    $ docker-compose run web rake db:create
+    $ docker-compose run web rake db:migrate
 
 That should get you going :)
