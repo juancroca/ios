@@ -20,10 +20,11 @@ ActiveRecord::Schema.define(version: 20150617200145) do
     t.string   "name"
     t.string   "semester"
     t.string   "description"
-    t.integer  "year"
+    t.integer  "year",                default: 2015
     t.datetime "enrollment_deadline"
     t.integer  "isis_id"
     t.boolean  "visible",             default: false
+    t.boolean  "closed",              default: false
     t.text     "preferences"
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
@@ -76,11 +77,13 @@ ActiveRecord::Schema.define(version: 20150617200145) do
   create_table "skill_scores", force: :cascade do |t|
     t.integer  "registration_id"
     t.integer  "skill_id"
+    t.integer  "group_id"
     t.integer  "score",           default: 0
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
   end
 
+  add_index "skill_scores", ["group_id"], name: "index_skill_scores_on_group_id", using: :btree
   add_index "skill_scores", ["registration_id"], name: "index_skill_scores_on_registration_id", using: :btree
   add_index "skill_scores", ["skill_id"], name: "index_skill_scores_on_skill_id", using: :btree
 
@@ -120,6 +123,7 @@ ActiveRecord::Schema.define(version: 20150617200145) do
   add_foreign_key "groups_users", "users"
   add_foreign_key "registrations", "courses"
   add_foreign_key "registrations", "users"
+  add_foreign_key "skill_scores", "groups"
   add_foreign_key "skill_scores", "registrations"
   add_foreign_key "skill_scores", "skills"
   add_foreign_key "supervisor_courses", "courses"

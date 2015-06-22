@@ -20,10 +20,10 @@ RUN curl -SLO "http://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x
 	&& npm cache clear
 
 ENV RAILS_ENV 'docker'
+
 # Yeah... you should change this to whatever kind of secret value you want (or set it in secrets.yml)
 ENV SECRET_KEY_BASE '3ab04beabe00b824d08fe852483d63d623b818e49c56e5ef4fc21c085ee61dfc2fbfd64594c7946bb226b67b54c18c19b2660aeb74c18c942f7183f59c375994'
 
 RUN mkdir /myapp
 WORKDIR /myapp
 ADD . /myapp
-RUN bundle install

@@ -3,6 +3,9 @@ class CoursesController < ApplicationController
   before_filter :load_supervisor_course, only: [:edit, :update, :show, :start, :success, :failure]
   before_filter :load_group, only: [:edit]
 
+  # Don't do CSRF checks for whatever is posted to the success and failure endpoints
+  skip_before_filter :verify_authenticity_token, :except => [:success, :failure]
+
   def index
     @courses = current_user.supervising
   end
@@ -29,13 +32,17 @@ class CoursesController < ApplicationController
     hash['endpoints'] = {success: success_course_path(@course), failure: failure_course_path(@course)}
     response = connection.post '/run', hash.to_json
     if response.status == 200
-      redirect_to @course
+      @course.closed = true
+      @course.save()
+
+      redirect_to @course, flash: {error: "Starting assignment of students to groups. Please check back in a minute to see the results!"}
     else
-      redirect_to @course, flash: {error: "We fucked up"}
+      redirect_to @course, flash: {error: "Could not start assignment of students to groups. Please try again later."}
     end
   end
 
   def success
+    
   end
 
   def failure

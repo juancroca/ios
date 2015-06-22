@@ -78,3 +78,4 @@
           = render partial: 'groups/form', locals: { f: g_form }
   = link_to "Add Group", '#',{:'data-target' => 'tbody#groups', 'data-element' => 'tr', class: ' add_fields button button-primary'}
   = f.submit 'Save'
+  = link_to "Start distribution", start_course_path(), :data => {:confirm => 'Running the assignment will close the enrollment. This action cannot be undone.Are you sure you want to start?'}, :class => 'button'

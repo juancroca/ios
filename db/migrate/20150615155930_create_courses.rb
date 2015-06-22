@@ -4,7 +4,7 @@ class CreateCourses < ActiveRecord::Migration
       table.string :name
       table.string :semester
       table.string :description
-      table.integer :year
+      table.integer :year, default: Time.now.year
       table.datetime :enrollment_deadline
       table.integer :isis_id, unique: true
       table.boolean :visible, default: false
