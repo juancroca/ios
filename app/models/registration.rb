@@ -24,7 +24,7 @@ class Registration < ActiveRecord::Base
     Jbuilder.new do |registration|
       registration.id student.id
       registration.name student.name
-      registration.mandatory compulsory
+      registration.mandatory compulsory || false
       registration.preferences group_ids
       registration.friends friend_ids
       registration.skills skill_scores.map{|ss| {"#{ss.skill.id}": ss.score}}

@@ -71,7 +71,7 @@ class RegistrationsController < ApplicationController
     end
 
     def set_course
-      @course = Course.find(params[:course_id])
+      @course = Course.visible.open.find(params[:course_id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

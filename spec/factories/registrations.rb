@@ -17,7 +17,8 @@ FactoryGirl.define do
       end
       after(:create) do |registration, evaluator|
         (1..evaluator.skill_score_count).each  do
-          create(:skill_score, registration: registration)
+          skill = create(:skill)
+          create(:skill_score, registration: registration, skill: skill)
         end
       end
     end

@@ -25,6 +25,8 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'haml'
 gem 'client_side_validations', github: 'DavyJonesLocker/client_side_validations', branch: '4-2-stable'
 gem 'migration_data'
+gem 'faraday'
+gem 'faraday_middleware'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

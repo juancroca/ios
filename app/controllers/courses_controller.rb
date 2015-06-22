@@ -1,6 +1,6 @@
 class CoursesController < ApplicationController
   before_filter :authenticate_supervisor!, only: [:edit, :update]
-  before_filter :load_supervisor_course, only: [:edit, :update, :show]
+  before_filter :load_supervisor_course, only: [:edit, :update, :show, :start, :success, :failure]
   before_filter :load_group, only: [:edit]
 
   def index
@@ -24,6 +24,23 @@ class CoursesController < ApplicationController
     end
   end
 
+  def start
+    hash = JSON.parse @course.to_builder.target!
+    hash['endpoints'] = {success: success_course_path(@course), failure: failure_course_path(@course)}
+    response = connection.post '/run', hash.to_json
+    if response.status == 200
+      redirect_to @course
+    else
+      redirect_to @course, flash: {error: "We fucked up"}
+    end
+  end
+
+  def success
+  end
+
+  def failure
+  end
+
   private
   def load_supervisor_course
     @course = current_supervisor.supervising.find(params[:id])
@@ -40,5 +57,13 @@ class CoursesController < ApplicationController
     params.require(:course).permit(:name, :semester, :description, :year, :enrollment_deadline, skill_ids: [],
                                     preferences: [:iterations, :groups, :prority, :friends, :diverse, :compulsory],
                                     groups_attributes: [:id, :name, :minsize, :maxsize, :description, :_destroy, skill_ids: []])
+  end
+
+  def connection
+    conn = Faraday.new(url: "http://#{ENV['SCALA_PORT_8080_TCP_ADDR']}:#{ENV['SCALA_PORT_8080_TCP_PORT']}") do |faraday|
+      faraday.headers['Content-Type'] = 'application/json'
+      faraday.adapter  Faraday.default_adapter  # make requests with Net::HTTP
+      faraday.request  :json
+    end
   end
 end

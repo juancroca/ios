@@ -16,8 +16,8 @@
   - if @registration.course.preferences.compulsory
     %h5 Your study
     .row
-      .six.columns
-        = f.label :compulsory
+      .twelve.columns
+        = f.label :compulsory, "Is this course a compulsory (non-optional) part of your curriculum?"
         = f.select :compulsory, options_for_select([['no', false], ['yes', true]])
 
 
@@ -46,11 +46,11 @@
     .row
       .six.columns
         %select{name: "registration[friend_ids][]", id: "friends", multiple: '', style: "width: 100%"}
-          = options_from_collection_for_select(@registration.course.students, :id, :name)
+          = options_from_collection_for_select((@registration.course.students - [current_student]), :id, :name, @registration.friend_ids)
 
       .row
         .twelve.columns
           %p
-            Anyone missing? This list only shows students enrolled in this course. If your friends are missing from the list, you can check back later and add them.
+            Anyone missing? This list only shows students enrolled in this course. If your friends are missing from the list, you can check back later and add them.            
 
   = f.submit 'Save'

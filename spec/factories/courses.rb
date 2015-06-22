@@ -48,10 +48,15 @@ FactoryGirl.define do
       preferences {{groups: true, friends: true, diverse: true, compulsory: true}}
     end
 
+    trait :visible do
+      visible true
+    end
+
     trait :with_associations do
       with_groups
       with_skills
       with_registrations
+      visible
     end
   end
 end
