@@ -1,6 +1,6 @@
 class CoursesController < ApplicationController
   before_filter :authenticate_supervisor!, only: [:edit, :update]
-  before_filter :load_supervisor_course, only: [:edit, :update, :show, :start, :success, :failure]
+  before_filter :load_supervisor_course, only: [:edit, :update, :show, :start]
   before_filter :load_group, only: [:edit]
 
   # Don't do CSRF checks for whatever is posted to the success and failure endpoints
@@ -29,8 +29,16 @@ class CoursesController < ApplicationController
 
   def start
     hash = JSON.parse @course.to_builder.target!
-    hash['endpoints'] = {success: success_course_path(@course), failure: failure_course_path(@course)}
+
+    hash['endpoints'] = {
+      success: "http://localhost:3000#{success_course_path(@course)}", 
+      failure: "http://localhost:3000#{failure_course_path(@course)}"
+    }
+    hash['settings']['iterations'] = 50
     response = connection.post '/run', hash.to_json
+
+    pp hash.to_json
+
     if response.status == 200
       @course.closed = true
       @course.save()
@@ -42,10 +50,15 @@ class CoursesController < ApplicationController
   end
 
   def success
-    
+    print(params)
+
+    head 200
   end
 
   def failure
+    print(params)
+
+    head 200
   end
 
   private

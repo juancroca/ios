@@ -37,7 +37,7 @@ FactoryGirl.define do
 
     trait :with_registrations do
       transient do
-        registration_count 5
+        registration_count 45
       end
       after(:create) do |course, evaluator|
         create_list(:registration, evaluator.registration_count, :with_associations, course_id: course.id)

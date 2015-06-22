@@ -37,7 +37,7 @@ class Course < ActiveRecord::Base
   def to_builder
     settings = Jbuilder.new do |settings|
       settings.diverse preferences.diverse || false
-      settings.iterations preferences.iterations || 0
+      settings.iterations preferences.iterations || 50
     end
     Jbuilder.new do |course|
       course.courseId id
