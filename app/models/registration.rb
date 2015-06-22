@@ -8,15 +8,26 @@ class Registration < ActiveRecord::Base
   serialize :groups, Hash
   serialize :friend_ids, Array
 
-  def groups
-    OpenStruct.new(self[:groups].as_json)
+  def group_ids
+    self.groups.map{|group| group[1]["id"]}
   end
 
   def build_course_skill_scores
     if self.skill_scores.count == 0
-      self.course.skills.each do |skill|
+      (self.course.groups.map(&:skills).flatten + self.course.skills).uniq.each do |skill|
         self.skill_scores.build(skill_id: skill.id)
       end
+    end
+  end
+
+  def to_builder
+    Jbuilder.new do |registration|
+      registration.id student.id
+      registration.name student.name
+      registration.mandatory compulsory
+      registration.preferences group_ids
+      registration.friends friend_ids
+      registration.skills skill_scores.map{|ss| {"#{ss.skill.id}": ss.score}}
     end
   end
 end

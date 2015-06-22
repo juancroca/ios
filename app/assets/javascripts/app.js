@@ -28,6 +28,12 @@ function ready() {
     el.parents("tr").fadeOut('hide');
     return false;
   });
+
+  $(".skills").chosen({
+      disable_search_threshold: 10,
+      no_results_text: "That skill isn't on the list (yet)\<br \/\>Maybe you can check again later!",
+      placeholder_text_multiple: "Please select your preferred skills"
+  });
 }
 $(document).ready(ready);
 $(document).on('page:load', ready);

@@ -5,11 +5,14 @@
       %p Please rank yourself on the following topics, 1 having no experience and 10 being very experienced
       = f.fields_for :skill_scores do |ss_form|
         .row
-          .three.columns
+          = ss_form.hidden_field :skill_id
+          .one.column
             = ss_form.object.skill.name
-          .three.columns
-            = ss_form.hidden_field :skill_id
-            = ss_form.number_field :score
+          - (1..10).each do |i|
+            .one.column
+              = ss_form.label :score, i.to_s
+              = ss_form.radio_button :score, i
+
   - if @registration.course.preferences.compulsory
     %h5 Your study
     .row
@@ -18,7 +21,7 @@
         = f.select :compulsory, options_for_select([['no', false], ['yes', true]])
 
 
-  -if @registration.course.preferences.preferences
+  -if @registration.course.preferences.groups
     %h5 Preferred topics
     .row
       Please select the order of preference of the topics.
@@ -42,7 +45,7 @@
           If there is anyone you would like to work with, you can select them from this list to increase your chances of sharing a group.
     .row
       .six.columns
-        %select{name: "registration[friend_ids][]", id: "registration_friend_ids_id"}
+        %select{name: "registration[friend_ids][]", id: "friends", multiple: '', style: "width: 100%"}
           = options_from_collection_for_select(@registration.course.students, :id, :name)
 
       .row

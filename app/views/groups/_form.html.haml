@@ -8,5 +8,7 @@
   %td
     = f.text_area :description, class: "u-full-width"
   %td
+    = f.collection_select  :skill_ids, Skill.all, :id, :name, {}, {class: "skills", multiple: '', style: "width: 100%"}
+  %td
     = link_to "X", '#',{class: 'button btn-danger remove_fields'}
     = f.hidden_field :_destroy

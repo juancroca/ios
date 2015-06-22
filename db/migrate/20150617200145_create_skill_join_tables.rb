@@ -3,6 +3,7 @@ class CreateSkillJoinTables < ActiveRecord::Migration
     create_table :skill_scores do |t|
       t.belongs_to :registration, index: true, foreign_key: true
       t.belongs_to :skill, index: true, foreign_key: true
+      t.belongs_to :group, index: true, foreign_key: true
       t.integer :score, default: 0
 
       t.timestamps null: false

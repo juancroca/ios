@@ -37,7 +37,8 @@ class CoursesController < ApplicationController
   end
 
   def course_params
-    params.require(:course).permit(:name, :semester, :description, :year, :enrollment_deadline, preferences: [:preferences, :friends, :diverse, :compulsory],
-                                    groups_attributes: [:id, :name, :minsize, :maxsize, :description, :_destroy])
+    params.require(:course).permit(:name, :semester, :description, :year, :enrollment_deadline, skill_ids: [],
+                                    preferences: [:iterations, :groups, :prority, :friends, :diverse, :compulsory],
+                                    groups_attributes: [:id, :name, :minsize, :maxsize, :description, :_destroy, skill_ids: []])
   end
 end

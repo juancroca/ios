@@ -45,7 +45,7 @@ FactoryGirl.define do
     end
 
     trait :with_preferences do
-      preferences {{preferences: true, friends: true, diverse: true, compulsory: true}}
+      preferences {{groups: true, friends: true, diverse: true, compulsory: true}}
     end
 
     trait :with_associations do

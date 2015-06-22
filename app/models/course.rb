@@ -21,4 +21,22 @@ class Course < ActiveRecord::Base
   def preferences
     OpenStruct.new(self[:preferences].as_json)
   end
+
+  def to_builder
+    endpoints = Jbuilder.new do |endpoints|
+      endpoints.success "yes"
+      endpoints.failure "no"
+    end
+    settings = Jbuilder.new do |settings|
+      settings.diverse preferences.diverse || false
+      settings.iterations preferences.iterations || 0
+    end
+    Jbuilder.new do |course|
+      course.courseId id
+      course.endpoints endpoints
+      course.settings settings
+      course.groups groups.map{|g| g.to_builder.attributes!}
+      course.students registrations.map{|s| s.to_builder.attributes!}
+    end
+  end
 end
