@@ -6,11 +6,13 @@ class CoursesController < ApplicationController
   # Don't do CSRF checks for whatever is posted to the success and failure endpoints
   skip_before_filter :verify_authenticity_token, :except => [:success, :failure]
 
-  def index
-    @courses = current_user.supervising
+  def show
+    # TODO: select that students only see their own group
   end
 
   def edit
+    # If this course is closed, then just show the results of the assignment
+    #redirect_to course_path(@course) if @course.closed?
   end
 
   # PATCH/PUT /registrations/1
@@ -43,14 +45,21 @@ class CoursesController < ApplicationController
       @course.closed = true
       @course.save()
 
-      redirect_to @course, flash: {error: "Starting assignment of students to groups. Please check back in a minute to see the results!"}
+      redirect_to course_path(@course), flash: {error: "Starting assignment of students to groups. Please check back in a minute to see the results!"}
     else
-      redirect_to @course, flash: {error: "Could not start assignment of students to groups. Please try again later."}
+      redirect_to course_path(@course), flash: {error: "Could not start assignment of students to groups. Please try again later."}
     end
   end
 
   def success
-    print(params)
+    # TODO: first drop everything that's currently in the groups?
+    params['groupMap'].each do |groupId, studentIds| 
+      group = Group.find(groupId)
+      studentIds.each do |studentId|
+        group.students << User.find(studentId)
+      end
+      group.save()
+    end
 
     head 200
   end

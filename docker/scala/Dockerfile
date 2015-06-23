@@ -3,4 +3,4 @@ FROM lukasz/docker-scala
 WORKDIR /myapp
 RUN ["git", "clone", "https://github.com/joroKr21/IoS-Algorithm.git", "."]
 
-CMD ["sbt", "container:start", "shell"]
+CMD ["sbt", "run", "jetty"]

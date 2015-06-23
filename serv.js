@@ -1,3 +1,13 @@
+/*
+A small NodeJS server that listens on port 8080.
+
+Helps in debugging what the Rails server sends to the assignment algorithm.
+
+Before running the Rails server, point the environment variables to this server:
+export SCALA_PORT_8080_TCP_ADDR='localhost'
+export SCALA_PORT_8080_TCP_PORT=8080
+*/
+
 // Load the http module to create an http server.
 var http = require('http');
 

@@ -18,14 +18,6 @@ FactoryGirl.define do
     end
 
     trait :with_students do
-      transient do
-        student_count 5
-      end
-      after(:create) do |group, evaluator|
-        (1..evaluator.student_count).each  do
-          group.students << create(:student)
-        end
-      end
     end
 
     trait :with_associations do

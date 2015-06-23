@@ -1,6 +1,12 @@
-%p#notice= notice
+.container
+  %p#notice= notice
 
-
-= link_to 'Edit', edit_course_path(@course)
-\|
-= link_to 'Back', courses_path
+  - if @course.closed
+    %h2
+      Results
+    %p
+      The results of the assignment are:
+    - @course.groups.each do |group|
+      %h5= group.name
+      - group.students.each do |student|
+        %p= student.name

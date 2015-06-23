@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
 
   devise_for :users, :controllers => { :registrations => "users/registrations" }
-  resources :courses, only: [:index, :show, :edit, :update] do
+  resources :courses, only: [:show, :edit, :update] do
     resources :registrations
     member do
     	get :start 
@@ -9,5 +9,4 @@ Rails.application.routes.draw do
     	post :failure
     end
   end
-  root 'courses#index'
 end
