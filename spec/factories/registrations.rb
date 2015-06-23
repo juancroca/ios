@@ -16,9 +16,16 @@ FactoryGirl.define do
         skill_score_count 5
       end
       after(:create) do |registration, evaluator|
-        (1..evaluator.skill_score_count).each  do
-          skill = create(:skill)
-          create(:skill_score, registration: registration, skill: skill)
+        skills = registration.course.groups.map(&:skills).flatten
+        if skills.empty?
+          (1..evaluator.skill_score_count).each  do
+            skill = create(:skill)
+            create(:skill_score, registration: registration, skill: skill)
+          end
+        else
+          skills.each do |skill|
+            create(:skill_score, registration: registration, skill: skill)
+          end
         end
       end
     end
