@@ -1,12 +1,12 @@
 # No need to change the database file: just take the latest Postgresql image
 db:
   image: postgres
-  ports:
+  expose:
     - "5432"
 # The algorithm node: rebuild from the recipe in the docker/scala folder
 scala:
   build: ./docker/scala
-  ports:
+  expose:
     - "8080"
 # The web container running our Ruby server
 # This is the only one with a port opened to the outside world!
@@ -15,9 +15,9 @@ ruby:
   command: /myapp/start.sh
   volumes:
     - .:/myapp
-    - ./docker/gemCache:/usr/local/bundle
+    - ./docker/caches/gems:/usr/local/bundle
   ports:
-    - "3000:3000"
+    - "127.0.0.1:3000:3000"
   links:
     - db
     - scala

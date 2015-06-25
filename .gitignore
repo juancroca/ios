@@ -16,6 +16,6 @@
 !/log/.keep
 /tmp
 
-docker/gemCache/*
+docker/caches/*
 
 config/database.yml
