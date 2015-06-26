@@ -11,13 +11,15 @@ scala:
 # The web container running our Ruby server
 # This is the only one with a port opened to the outside world!
 ruby:
-  build: ./docker/ruby
-  command: /myapp/start.sh
-  volumes:
-    - .:/myapp
-    - ./docker/caches/gems:/usr/local/bundle
+  build: .
+#  command: /myapp/start.sh
+  #volumes:
+  #  - .:/myapp
+  #  - ./docker/caches/gems:/usr/local/bundle
   ports:
-    - "127.0.0.1:3000:3000"
+    - "3000:3000"
+    - "80:80"
+    - "443:443"
   links:
     - db
     - scala
