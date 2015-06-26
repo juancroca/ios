@@ -1,5 +1,5 @@
 # === 1 ===
-FROM phusion/passenger-ruby21:0.9.12
+FROM phusion/passenger-ruby22
 
 # Set correct environment variables.
 ENV HOME /root
@@ -35,7 +35,3 @@ ADD . /home/app/webapp
 
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-EXPOSE "80:80"
-EXPOSE "3000:3000"
-EXPOSE "443:443"
