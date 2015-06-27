@@ -3,11 +3,11 @@
 To run in Docker compose, do:
 
     $ docker-compose build
-    $ docker-compose up
+    $ docker compose up
 
-When the database is up, run (in a separate window)
+	# Get the CONTAINER ID of the ruby container
+    $ docker ps
 
-    $ docker-compose run web rake db:create
-    $ docker-compose run web rake db:migrate
+    $ docker exec <<CONTAINER ID>> /bin/sh -c 'export RAILS_ENV=production; cd /home/app/webapp; rake db:setup'
 
 That should get you going :)

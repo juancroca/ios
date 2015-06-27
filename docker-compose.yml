@@ -16,7 +16,7 @@ ruby:
     - "80:80"
   environment:
     # This should be done in a cleaner way...
-    - SECRET_KEY_BASE="cf3f3aa89956ba0f3c7f84389a9944c893628a77b7c04573e8984a62b3ab3ab1d139689aaf6ec6a1b1a1fa4bf415b537c8ecd15b751595a889380f9b667bbf6f"
+    SECRET_KEY_BASE:cf3f3aa89956ba0f3c7f84389a9944c893628a77b7c04573e8984a62b3ab3ab1d139689aaf6ec6a1b1a1fa4bf415b537c8ecd15b751595a889380f9b667bbf6f
   links:
     - db
     - scala
