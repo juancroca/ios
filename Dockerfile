@@ -33,5 +33,8 @@ RUN bundle install
 # Add the rails app
 ADD . /home/app/webapp
 
+WORKDIR /home/app/webapp
+RUN rake assets:precompile
+
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
