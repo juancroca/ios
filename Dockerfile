@@ -34,7 +34,7 @@ RUN bundle install
 ADD . /home/app/webapp
 
 WORKDIR /home/app/webapp
-RUN rake assets:precompile
+RUN RAILS_ENV=production rake assets:precompile
 
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

@@ -8,6 +8,6 @@ To run in Docker compose, do:
 	# Get the CONTAINER ID of the ruby container
     $ docker ps
 
-    $ docker exec <<CONTAINER ID>> /bin/sh -c 'export RAILS_ENV=production; cd /home/app/webapp; rake db:setup; rake assets:precompile'
+    $ docker exec <<CONTAINER ID>> /bin/sh -c 'export RAILS_ENV=production; cd /home/app/webapp; rake db:setup;'
 
 That should get you going :)
