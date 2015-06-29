@@ -3,7 +3,7 @@ class Registration < ActiveRecord::Base
   belongs_to :course
   has_many :skill_scores
 
-  accepts_nested_attributes_for :skill_scores, :reject_if => :all_blank
+  accepts_nested_attributes_for :skill_scores
 
   serialize :groups, Hash
   serialize :friend_ids, Array

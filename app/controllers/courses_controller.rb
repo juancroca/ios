@@ -1,6 +1,8 @@
 class CoursesController < ApplicationController
   before_filter :authenticate_supervisor!, only: [:edit, :update]
+  before_filter :authenticate_student!, only: [:result]
   before_filter :load_supervisor_course, only: [:edit, :update, :show, :start]
+  before_filter :load_course, only: [:result]
   before_filter :load_group, only: [:edit]
 
   # Don't do CSRF checks for whatever is posted to the success and failure endpoints
@@ -8,11 +10,16 @@ class CoursesController < ApplicationController
 
   def show
     # TODO: select that students only see their own group
+    
   end
 
   def edit
     # If this course is closed, then just show the results of the assignment
     #redirect_to course_path(@course) if @course.closed?
+  end
+
+  def result
+    @course.groups.select{|group| group.students.include?(current_student)}[0]
   end
 
   # PATCH/PUT /registrations/1
@@ -76,6 +83,10 @@ class CoursesController < ApplicationController
     if @course.nil?
       return redirect_to root_path
     end
+  end
+
+  def load_course
+    @course = Course.visible.find(params[:id])
   end
 
   def load_group

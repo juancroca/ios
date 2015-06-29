@@ -12,6 +12,7 @@ class RegistrationsController < ApplicationController
   # GET /registrations/1
   # GET /registrations/1.json
   def show
+    redirect_to edit_course_registration_path(@course, @registration)
   end
 
   # GET /registrations/new
@@ -22,6 +23,7 @@ class RegistrationsController < ApplicationController
 
   # GET /registrations/1/edit
   def edit
+    render :result if @course.closed
   end
 
   # POST /registrations
@@ -71,7 +73,10 @@ class RegistrationsController < ApplicationController
     end
 
     def set_course
-      @course = Course.visible.open.find(params[:course_id])
+      @course = Course.visible.find(params[:course_id])
+      unless @course.try(:open?)
+        redirect_to result_course_path(@course)
+      end
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
