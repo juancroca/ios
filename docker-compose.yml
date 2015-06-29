@@ -8,6 +8,8 @@ scala:
   build: ./docker/scala
   expose:
     - "8080"
+  links:
+    - ruby
 # The web container running our Ruby server
 # This is the only one with a port opened to the outside world!
 ruby:
