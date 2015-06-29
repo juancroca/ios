@@ -3,7 +3,7 @@ class CoursesController < ApplicationController
   before_filter :authenticate_student!, only: [:result]
   before_filter :load_supervisor_course, only: [:edit, :update, :show, :start]
   before_filter :load_course, only: [:result]
-  before_filter :load_group, only: [:edit]
+  before_filter :load_associations, only: [:edit]
 
   # Don't do CSRF checks for whatever is posted to the success and failure endpoints
   skip_before_filter :verify_authenticity_token, :except => [:success, :failure]
@@ -22,8 +22,8 @@ class CoursesController < ApplicationController
     @group = @course.groups.select{|group| group.students.include?(current_student)}[0]
   end
 
-  # PATCH/PUT /registrations/1
-  # PATCH/PUT /registrations/1.json
+  # PATCH/PUT /courses/1
+  # PATCH/PUT /courses/1.json
   def update
     respond_to do |format|
       if @course.update(course_params)
@@ -88,12 +88,13 @@ class CoursesController < ApplicationController
     @course = Course.visible.find(params[:id])
   end
 
-  def load_group
+  def load_associations
     @course.groups.build if @course.groups.empty?
+    @course.study_fields = [""] if @course.study_fields.empty?
   end
 
   def course_params
-    params.require(:course).permit(:name, :semester, :description, :year, :enrollment_deadline, skill_ids: [],
+    params.require(:course).permit(:name, :semester, :description, :year, :enrollment_deadline, study_fields: [], skill_ids: [],
                                     preferences: [:iterations, :groups, :prority, :friends, :diverse, :compulsory],
                                     groups_attributes: [:id, :name, :minsize, :maxsize, :description, :weight, :mandatory, :_destroy, skill_ids: []])
   end
