@@ -13,6 +13,8 @@ class Group < ActiveRecord::Base
       group.minSize minsize
       group.maxSize maxsize
       group.skills skills.ids
+      group.mandatory mandatory
+      group.weight weight
     end
   end
 

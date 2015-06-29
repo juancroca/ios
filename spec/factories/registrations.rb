@@ -30,8 +30,30 @@ FactoryGirl.define do
       end
     end
 
+    trait :with_friends do
+      transient do
+        friends_count 5
+      end
+      before(:create) do |registration, evaluator|
+        students = registration.course.students
+        friends_count = evaluator.friends_count
+        friends_count = students.count if students.count < friends_count
+        registration.friend_ids = registration.course.students.first(friends_count).map(&:id)
+      end
+    end
+
+    trait :with_groups do
+      before(:create) do |registration, evaluator|
+        registration.course.groups.ids.each do |id|
+          registration.groups[id.to_s] = Random.rand(11)
+        end
+      end
+    end
+
     trait :with_associations do
       with_skill_scores
+      with_friends
+      with_groups
     end
   end
 

@@ -10,5 +10,11 @@
   %td
     = f.collection_select  :skill_ids, Skill.all, :id, :name, {}, {class: "skills", multiple: '', style: "width: 100%"}
   %td
+    = f.check_box :mandatory
+  %td
+    %span{id: "weight#{f.index}", class:"slider-score"}
+      = f.object.weight
+    = f.range_field :weight, {min: 0, max: 10, class: 'slider', :'data-target' => "span#weight#{f.index}"}
+  %td
     = link_to "X", '#',{class: 'button btn-danger remove_fields'}
     = f.hidden_field :_destroy
