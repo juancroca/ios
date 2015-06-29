@@ -61,7 +61,7 @@
       .four.columns
         = p_form.label :iterations do |label|
           = label.translation
-          %span#iterationsVal
+          %span#iterationsVal.slider-score
             = @course.preferences.iterations
         = p_form.range_field :iterations, {min: 10, max: 200, class: 'slider', :'data-target' => 'span#iterationsVal'}
 

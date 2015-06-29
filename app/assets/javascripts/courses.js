@@ -1,8 +1,5 @@
 var page_ready = function() {
-	$('.slider').on("change load mousemove", function() {
-		var target = $(this).data("target");
-    $(target).html($(this).val());
-  });
+	
 };
 
 

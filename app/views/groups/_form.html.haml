@@ -12,7 +12,7 @@
   %td
     = f.check_box :mandatory
   %td
-    %span{id: "weight#{f.index}"}
+    %span{id: "weight#{f.index}", class:"slider-score"}
       = f.object.weight
     = f.range_field :weight, {min: 0, max: 10, class: 'slider', :'data-target' => "span#weight#{f.index}"}
   %td
