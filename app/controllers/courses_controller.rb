@@ -33,8 +33,8 @@ class CoursesController < ApplicationController
     hash = JSON.parse @course.to_builder.target!
 
     hash['endpoints'] = {
-      success: "http://localhost:3000#{success_course_path(@course)}", 
-      failure: "http://localhost:3000#{failure_course_path(@course)}"
+      success: "http://ruby#{success_course_path(@course)}",
+      failure: "http://ruby#{failure_course_path(@course)}"
     }
     hash['settings']['iterations'] = 50
     response = connection.post '/run', hash.to_json
@@ -53,7 +53,7 @@ class CoursesController < ApplicationController
 
   def success
     # TODO: first drop everything that's currently in the groups?
-    params['groupMap'].each do |groupId, studentIds| 
+    params['groupMap'].each do |groupId, studentIds|
       group = Group.find(groupId)
       studentIds.each do |studentId|
         group.students << User.find(studentId)
@@ -89,7 +89,7 @@ class CoursesController < ApplicationController
   end
 
   def connection
-    conn = Faraday.new(url: "http://#{ENV['SCALA_PORT_8080_TCP_ADDR']}:#{ENV['SCALA_PORT_8080_TCP_PORT']}") do |faraday|
+    conn = Faraday.new(url: "http://scala:8080") do |faraday|
       faraday.headers['Content-Type'] = 'application/json'
       faraday.adapter  Faraday.default_adapter  # make requests with Net::HTTP
       faraday.request  :json
