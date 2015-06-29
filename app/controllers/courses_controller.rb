@@ -10,7 +10,7 @@ class CoursesController < ApplicationController
 
   def show
     # TODO: select that students only see their own group
-    
+
   end
 
   def edit
@@ -19,7 +19,7 @@ class CoursesController < ApplicationController
   end
 
   def result
-    @course.groups.select{|group| group.students.include?(current_student)}[0]
+    @group = @course.groups.select{|group| group.students.include?(current_student)}[0]
   end
 
   # PATCH/PUT /registrations/1

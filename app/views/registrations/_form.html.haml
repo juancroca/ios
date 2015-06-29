@@ -1,10 +1,13 @@
 - if @registration.errors.any?
   .row
     .twelve.columns#error_explanation
-      ="#{pluralize(@registration.errors.count, "error")} prohibited this course from being saved:"
+      ="#{pluralize((@registration.errors.count + @course.errors.count), "error")} prohibited this registration from being saved:"
       %ul
         - @registration.errors.full_messages.each do |msg|
           %li= msg
+        - @course.errors.full_messages.each do |msg|
+          %li= msg
+        
 
 = form_for [@course, @registration], validate: true do |f|
   -if @registration.course.skills
