@@ -75,7 +75,7 @@ class RegistrationsController < ApplicationController
     def set_course
       @course = Course.visible.find(params[:course_id])
       unless @course.try(:open?)
-        redirect_to result_course_path(@course)
+        redirect_to course_path(@course)
       end
     end
 

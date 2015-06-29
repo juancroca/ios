@@ -2,11 +2,12 @@
   %p#notice= notice
 
   - if @course.closed
-    %h2
-      Results
-    %p
-      The results of the assignment are:
-    - @course.groups.each do |group|
-      %h5= group.name
-      - group.students.each do |student|
-        %p= student.name
+    .row
+      %h2
+        Result of distribution
+        - @groups.each do |group|
+          %h5= group.name
+          .row
+            %ul
+              - group.students.each do |student|
+                %li= student.name

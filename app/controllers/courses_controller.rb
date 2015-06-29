@@ -1,15 +1,22 @@
 class CoursesController < ApplicationController
   before_filter :authenticate_supervisor!, only: [:edit, :update]
-  before_filter :authenticate_student!, only: [:result]
-  before_filter :load_supervisor_course, only: [:edit, :update, :show, :start]
-  before_filter :load_course, only: [:result]
+  before_filter :authenticate_user!, only: [:result]
+  before_filter :load_supervisor_course, only: [:edit, :update, :start]
   before_filter :load_associations, only: [:edit]
 
   # Don't do CSRF checks for whatever is posted to the success and failure endpoints
   skip_before_filter :verify_authenticity_token, :except => [:success, :failure]
 
   def show
-    # TODO: select that students only see their own group
+    if supervisor_signed_in?
+      load_supervisor_course
+      @groups = @course.groups
+    end
+
+    if student_signed_in?
+      load_student_course
+      @groups = @course.groups.joins(:students).where("groups_users.user_id" => current_student.id)
+    end
 
   end
 
@@ -84,8 +91,11 @@ class CoursesController < ApplicationController
     end
   end
 
-  def load_course
-    @course = Course.visible.find(params[:id])
+  def load_student_course
+    @course = current_student.attending.find(params[:id])
+    if @course.nil?
+      return redirect_to root_path
+    end
   end
 
   def load_associations
