@@ -8,9 +8,6 @@ class Registration < ActiveRecord::Base
   serialize :groups, Hash
   serialize :friend_ids, Array
 
-  def group_ids
-    self.groups.map{|group| group[1]["id"]}
-  end
 
   def build_course_skill_scores
     if self.skill_scores.count == 0
@@ -20,13 +17,17 @@ class Registration < ActiveRecord::Base
     end
   end
 
+  def groups_normalized
+    self.groups.inject({}){ |hash, (k, v)| hash.merge( k => v/10.0 )  }
+  end
+
   def to_builder
     Jbuilder.new do |registration|
       registration.id student.id
       registration.name student.name
       registration.mandatory compulsory || false
-      registration.preferences group_ids
-      registration.friends friend_ids
+      registration.preferences course.preferences.groups ? groups_normalized : []
+      registration.friends course.preferences.friends ? friend_ids : []
       registration.skills skill_scores.map{|ss| {"#{ss.skill.id}": ss.score}}
     end
   end

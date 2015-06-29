@@ -1,7 +1,8 @@
 var page_ready = function() {
-	$('#iterations').on("change load mousemove", function() {
-      $('#iterationsVal').html($(this).val());
-    });
+	$('.slider').on("change load mousemove", function() {
+		var target = $(this).data("target");
+    $(target).html($(this).val());
+  });
 };
 
 

@@ -59,11 +59,12 @@
         Advanced options
     .row
       .four.columns
-        %label{:for => 'iterations'} Number of iterations
-        %input{:type => 'range', :id => 'iterations', :name => 'course[preferences][iterations]', :min => 10, :max => 200, :value => @course.preferences.iterations}
-      .four.columns
-        #iterationsVal 
-          = @course.preferences.iterations
+        = p_form.label :iterations do |label|
+          = label.translation
+          %span#iterationsVal
+            = @course.preferences.iterations
+        = p_form.range_field :iterations, {min: 10, max: 200, class: 'slider', :'data-target' => 'span#iterationsVal'}
+
   #groups
     %table.u-full-width
       %thead
@@ -78,6 +79,10 @@
             Description
           %th
             Skills
+          %th
+            Mandatory
+          %th
+            Weight
           %th
       %tbody#groups
         = f.fields_for :groups do |g_form|

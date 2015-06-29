@@ -36,7 +36,6 @@ class CoursesController < ApplicationController
       success: "http://ruby#{success_course_path(@course)}",
       failure: "http://ruby#{failure_course_path(@course)}"
     }
-    hash['settings']['iterations'] = 50
     response = connection.post '/run', hash.to_json
 
     pp hash.to_json
@@ -85,7 +84,7 @@ class CoursesController < ApplicationController
   def course_params
     params.require(:course).permit(:name, :semester, :description, :year, :enrollment_deadline, skill_ids: [],
                                     preferences: [:iterations, :groups, :prority, :friends, :diverse, :compulsory],
-                                    groups_attributes: [:id, :name, :minsize, :maxsize, :description, :_destroy, skill_ids: []])
+                                    groups_attributes: [:id, :name, :minsize, :maxsize, :description, :weight, :mandatory, :_destroy, skill_ids: []])
   end
 
   def connection
