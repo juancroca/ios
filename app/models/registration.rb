@@ -18,7 +18,11 @@ class Registration < ActiveRecord::Base
   end
 
   def groups_normalized
-    self.groups.inject({}){ |hash, (k, v)| hash.merge( k => v/10.0 )  }
+    self.groups.inject({}){ |hash, (k, v)| hash.merge( k => (v.to_i/10.0) )  }
+  end
+
+  def compulsory
+    self.course.study_fields.include? self.study_field
   end
 
   def to_builder

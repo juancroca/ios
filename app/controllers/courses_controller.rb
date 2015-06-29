@@ -96,7 +96,7 @@ class CoursesController < ApplicationController
   def course_params
     params.require(:course).permit(:name, :semester, :description, :year, :enrollment_deadline, study_fields: [], skill_ids: [],
                                     preferences: [:iterations, :groups, :prority, :friends, :diverse, :compulsory],
-                                    groups_attributes: [:id, :name, :minsize, :maxsize, :description, :weight, :mandatory, :_destroy, skill_ids: []])
+                                    groups_attributes: [:id, :name, :minsize, :maxsize, :description, :mandatory, :_destroy, skill_ids: []])
   end
 
   def connection

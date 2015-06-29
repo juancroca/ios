@@ -81,8 +81,7 @@ class RegistrationsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def registration_params
-      params[:registration]
-      params.require(:registration).permit(:compulsory, friend_ids: [], groups: [:id],
+      params.require(:registration).permit(:study_field, friend_ids: [], groups: params[:registration][:groups].try(:keys),
                                       skill_scores_attributes: [:id, :score, :skill_id])
     end
 end

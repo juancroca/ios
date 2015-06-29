@@ -7,7 +7,7 @@
           %li= msg
         - @course.errors.full_messages.each do |msg|
           %li= msg
-        
+
 
 = form_for [@course, @registration], validate: true do |f|
   -if @registration.course.skills
@@ -28,8 +28,8 @@
     %h5 Your study
     .row
       .twelve.columns
-        = f.label :compulsory, "Is this course a compulsory (non-optional) part of your curriculum?"
-        = f.select :compulsory, options_for_select([['no', false], ['yes', true]])
+        = f.label :study_field
+        = f.select :study_field, options_for_select(@registration.course.study_fields), { include_blank: true }
 
 
   -if @registration.course.preferences.groups
@@ -37,12 +37,16 @@
     .row
       Please select the order of preference of the topics.
     = f.fields_for :groups do |p_form|
-      - @registration.course.groups.each_with_index do |group, index|
+      - @registration.course.groups.each do |group|
         .row
           .three.columns
-            = label_tag
+            = label_tag do
+              = group.name + ': '
+              %span{id: "weight#{group.id}"}
+                = @registration.groups.try(:[], group.id.to_s)
+        .row
           .three.columns
-            = p_form.collection_select 'id', @registration.course.groups, :id, :name, {}, {index: index}
+            = p_form.range_field group.id, {min: 0, max: 10, class: 'slider', :'data-target' => "span#weight#{group.id}"}
     .row
       .twelve.columns
         %p Please select each group exactly once
@@ -62,6 +66,6 @@
       .row
         .twelve.columns
           %p
-            Anyone missing? This list only shows students enrolled in this course. If your friends are missing from the list, you can check back later and add them.            
+            Anyone missing? This list only shows students enrolled in this course. If your friends are missing from the list, you can check back later and add them.
 
   = f.submit 'Save'
