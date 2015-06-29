@@ -10,4 +10,8 @@ To run in Docker compose, do:
 
     $ docker exec <<CONTAINER ID>> /bin/sh -c 'export RAILS_ENV=production; cd /home/app/webapp; rake db:setup;'
 
+To run ```rails console```, do:
+
+    $ docker exec -t -i <<CONTAINER ID>> /bin/sh -c 'export RAILS_ENV=production; cd /home/app/webapp; bundle exec rails c'
+
 That should get you going :)

@@ -54,10 +54,16 @@
         Compulsory attendance:
       adds support for a group of students that must be assigned to a group (i.e. not the waitinglist).
     .row
+      .twelve.columns
       %h5
-        Advanced Options
-      = p_form.label :iterations
-      = p_form.number_field :iterations
+        Advanced options
+    .row
+      .four.columns
+        %label{:for => 'iterations'} Number of iterations
+        %input{:type => 'range', :id => 'iterations', :name => 'course[preferences][iterations]', :min => 10, :max => 200, :value => @course.preferences.iterations}
+      .four.columns
+        #iterationsVal 
+          = @course.preferences.iterations
   #groups
     %table.u-full-width
       %thead
@@ -78,4 +84,4 @@
           = render partial: 'groups/form', locals: { f: g_form }
   = link_to "Add Group", '#',{:'data-target' => 'tbody#groups', 'data-element' => 'tr', class: ' add_fields button button-primary'}
   = f.submit 'Save'
-  = link_to "Start distribution", start_course_path(), :data => {:confirm => 'Running the assignment will close the enrollment. This action cannot be undone.Are you sure you want to start?'}, :class => 'button'
+  = link_to "Start distribution", start_course_path(), :data => {:confirm => 'Running the assignment will close the enrollment. This action cannot be undone. Are you sure you want to start?'}, :class => 'button'

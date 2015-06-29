@@ -5,3 +5,7 @@
   padding-left: 15px;
   padding-right: 15px;
 }
+
+input[type=range] {
+	width: 100%;
+}
