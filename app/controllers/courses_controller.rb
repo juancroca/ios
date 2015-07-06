@@ -40,9 +40,10 @@ class CoursesController < ApplicationController
     hash = JSON.parse @course.to_builder.target!
 
     hash['endpoints'] = {
-      success: "http://ruby#{success_course_path(@course)}",
-      failure: "http://ruby#{failure_course_path(@course)}"
+      success: "#{success_course_path(@course)}",
+      failure: "#{failure_course_path(@course)}"
     }
+
     response = connection.post '/run', hash.to_json
 
     pp hash.to_json
