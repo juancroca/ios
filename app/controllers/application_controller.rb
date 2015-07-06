@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   helper_method :supervisor_signed_in?, :current_supervisor, :student_signed_in?, :current_student
 
   def authenticate_supervisor!
-    redirect_to root_path unless supervisor_signed_in?
+    redirect_to new_user_registration_path unless supervisor_signed_in?
   end
 
   def supervisor_signed_in?
@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
   end
 
   def authenticate_student!
-    redirect_to root_path unless student_signed_in?
+    redirect_to new_user_registration_path unless student_signed_in?
   end
 
   def student_signed_in?
