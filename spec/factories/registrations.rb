@@ -3,14 +3,6 @@ FactoryGirl.define do
     association :student
     association :course
 
-    trait :is_required do
-      compulsory true
-    end
-
-    trait :not_required do
-      compulsory false
-    end
-
     trait :with_skill_scores do
       transient do
         skill_score_count 5

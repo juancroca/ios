@@ -14,7 +14,10 @@ class Course < ActiveRecord::Base
   validates :year, numericality: true, on: :update
   validates :name, :semester, presence: true, on: :update
 
+  before_save :purge_study_fields
+
   serialize :preferences, Hash
+  serialize :study_fields, Array
 
   scope :visible, -> {where(visible: true)}
   scope :open, -> {where(closed: false)}
@@ -45,5 +48,12 @@ class Course < ActiveRecord::Base
       course.groups groups.map{|g| g.to_builder.attributes!}
       course.students registrations.map{|s| s.to_builder.attributes!}
     end
+  end
+
+  private
+  def purge_study_fields
+    self.study_fields.flatten!
+    self.study_fields.uniq!
+    self.study_fields.delete("")
   end
 end

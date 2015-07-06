@@ -1,3 +1,15 @@
+function formHelpers(){
+  $('.slider').on("change load mousemove", function() {
+		var target = $(this).data("target");
+    $(target).html($(this).val());
+  });
+  $(".skills").chosen({
+      disable_search_threshold: 10,
+      no_results_text: "That skill isn't on the list (yet)\<br \/\>Maybe you can check again later!",
+      placeholder_text_multiple: "Please select your preferred skills"
+  });
+}
+
 function ready() {
   var uniqueId = 1;
   $('.add_fields').click(function() {
@@ -50,7 +62,7 @@ function ready() {
     });
     new_table_row.show();
     $(target).prepend(new_table_row);
-    ready();
+    formHelpers();
   })
 
   $('body').on('click', 'a.remove_fields', function() {
@@ -59,17 +71,7 @@ function ready() {
     el.parents("tr").fadeOut('hide');
     return false;
   });
-
-  $(".skills").chosen({
-      disable_search_threshold: 10,
-      no_results_text: "That skill isn't on the list (yet)\<br \/\>Maybe you can check again later!",
-      placeholder_text_multiple: "Please select your preferred skills"
-  });
-
-  $('.slider').on("change load mousemove", function() {
-		var target = $(this).data("target");
-    $(target).html($(this).val());
-  });
+  formHelpers();
 }
 $(document).ready(ready);
 $(document).on('page:load', ready);

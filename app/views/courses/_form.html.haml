@@ -65,6 +65,25 @@
             = @course.preferences.iterations
         = p_form.range_field :iterations, {min: 10, max: 200, class: 'slider', :'data-target' => 'span#iterationsVal'}
 
+  %h4
+    Mandatory Study Fields
+  #studies
+    %table.u-full-width
+      %thead
+        %tr
+          %th
+            Name
+          %th
+      %tbody#studies
+        - @course.study_fields.each do |study_field|
+          %tr
+            %td
+              %input{type: "text", name: "course[study_fields][]", id: "study_fields", style: "width: 100%", value: study_field}
+            %td
+              = link_to "X", '#',{class: 'button btn-danger remove_fields'}
+  = link_to "Add Study Field", '#',{:'data-target' => 'tbody#studies', 'data-element' => 'tr', class: ' add_fields button button-primary'}
+  %h4
+    Groups
   #groups
     %table.u-full-width
       %thead
@@ -81,8 +100,6 @@
             Skills
           %th
             Mandatory
-          %th
-            Weight
           %th
       %tbody#groups
         = f.fields_for :groups do |g_form|
