@@ -1,11 +1,13 @@
 class Group < ActiveRecord::Base
-  has_and_belongs_to_many :students, class_name: "User"
   belongs_to :course
   has_and_belongs_to_many :skills
-
+  has_many :results
+  has_many :students, ->{ uniq }, through: :results, class_name: "User", source: :user
   validates :name, presence: true
   validates :minsize, :maxsize, numericality: { only_integer: true, greater_than: 0}
   validate :sizes_validation
+
+  scope :mandatory, -> {where(mandatory: true)}
 
   def to_builder
     Jbuilder.new do |group|

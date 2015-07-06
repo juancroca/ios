@@ -74,9 +74,7 @@ class RegistrationsController < ApplicationController
 
     def set_course
       @course = Course.visible.find(params[:course_id])
-      unless @course.try(:open?)
-        redirect_to course_path(@course)
-      end
+      return redirect_to closed_course_path(@course) if @course.try(:closed?)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

@@ -1,7 +1,7 @@
 class Registration < ActiveRecord::Base
   belongs_to :student, class_name: "User", foreign_key: :user_id
   belongs_to :course
-  has_many :skill_scores
+  has_many :skill_scores, dependent: :destroy
 
   accepts_nested_attributes_for :skill_scores
 

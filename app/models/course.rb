@@ -4,6 +4,7 @@ class Course < ActiveRecord::Base
   has_many :supervisor_courses
   has_many :students, through: :registrations
   has_many :supervisors, through: :supervisor_courses
+  has_many :jobs
   has_and_belongs_to_many :skills
 
   accepts_nested_attributes_for :groups, :reject_if => :all_blank, :allow_destroy => true
@@ -43,14 +44,43 @@ class Course < ActiveRecord::Base
       settings.iterations preferences.iterations.to_i || 50
     end
     Jbuilder.new do |course|
-      course.courseId id
       course.settings settings
       course.groups groups.map{|g| g.to_builder.attributes!}
       course.students registrations.map{|s| s.to_builder.attributes!}
     end
   end
 
+  def create_groups
+    job = self.jobs.build
+    if job.save
+      endpoints = {
+        success: "http://ruby#{Rails.application.routes.url_helpers.success_course_job_path(self, job)}",
+        failure: "http://ruby#{Rails.application.routes.url_helpers.failure_course_job_path(self, job)}"
+      }
+      hash = JSON.parse self.to_builder.target!
+      hash[:courseId] = job.id
+      hash.merge!({endpoints: endpoints})
+      response = connection.post '/run', hash.to_json
+      pp hash.to_json
+      if response.status == 200
+        self.update(closed: true)
+        job.update(started: true)
+      end
+      return job
+    end
+    return job
+  end
+
   private
+
+  def connection
+    conn = Faraday.new(url: "http://scala:8080") do |faraday|
+      faraday.headers['Content-Type'] = 'application/json'
+      faraday.adapter  Faraday.default_adapter  # make requests with Net::HTTP
+      faraday.request  :json
+    end
+  end
+
   def purge_study_fields
     self.study_fields.flatten!
     self.study_fields.uniq!

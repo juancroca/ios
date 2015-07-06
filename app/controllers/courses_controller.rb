@@ -1,6 +1,6 @@
 class CoursesController < ApplicationController
   before_filter :authenticate_supervisor!, only: [:edit, :update]
-  before_filter :authenticate_user!, only: [:result]
+  before_filter :authenticate_user!, only: [:show]
   before_filter :load_supervisor_course, only: [:edit, :update, :start]
   before_filter :load_associations, only: [:edit]
 
@@ -10,12 +10,12 @@ class CoursesController < ApplicationController
   def show
     if supervisor_signed_in?
       load_supervisor_course
-      @groups = @course.groups
+      @jobs = @course.jobs.completed
     end
 
     if student_signed_in?
       load_student_course
-      @groups = @course.groups.joins(:students).where("groups_users.user_id" => current_student.id)
+      @group = @course.jobs.last.groups.joins(:students).where("results_groups_join.user_id" => current_student.id).first
     end
 
   end
@@ -23,10 +23,6 @@ class CoursesController < ApplicationController
   def edit
     # If this course is closed, then just show the results of the assignment
     #redirect_to course_path(@course) if @course.closed?
-  end
-
-  def result
-    @group = @course.groups.select{|group| group.students.include?(current_student)}[0]
   end
 
   # PATCH/PUT /courses/1
@@ -44,44 +40,14 @@ class CoursesController < ApplicationController
   end
 
   def start
-    hash = JSON.parse @course.to_builder.target!
-
-    hash['endpoints'] = {
-      success: "#{success_course_path(@course)}",
-      failure: "#{failure_course_path(@course)}"
-    }
-
-    response = connection.post '/run', hash.to_json
-
-    pp hash.to_json
-
-    if response.status == 200
-      @course.closed = true
-      @course.save()
-
+    job = @course.create_groups
+    if job.started?
       redirect_to course_path(@course), flash: {error: "Starting assignment of students to groups. Please check back in a minute to see the results!"}
     else
+      # ********if job.errors
       redirect_to course_path(@course), flash: {error: "Could not start assignment of students to groups. Please try again later."}
     end
-  end
 
-  def success
-    # TODO: first drop everything that's currently in the groups?
-    params['groupMap'].each do |groupId, studentIds|
-      group = Group.find(groupId)
-      studentIds.each do |studentId|
-        group.students << User.find(studentId)
-      end
-      group.save()
-    end
-
-    head 200
-  end
-
-  def failure
-    print(params)
-
-    head 200
   end
 
   private
@@ -93,9 +59,9 @@ class CoursesController < ApplicationController
   end
 
   def load_student_course
-    @course = current_student.attending.find(params[:id])
+    @course = current_student.attending.find_by_id(params[:id])
     if @course.nil?
-      return redirect_to root_path
+      redirect_to root_path
     end
   end
 
@@ -110,11 +76,5 @@ class CoursesController < ApplicationController
                                     groups_attributes: [:id, :name, :minsize, :maxsize, :description, :mandatory, :_destroy, skill_ids: []])
   end
 
-  def connection
-    conn = Faraday.new(url: "http://scala:8080") do |faraday|
-      faraday.headers['Content-Type'] = 'application/json'
-      faraday.adapter  Faraday.default_adapter  # make requests with Net::HTTP
-      faraday.request  :json
-    end
-  end
+
 end

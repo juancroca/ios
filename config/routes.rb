@@ -5,8 +5,13 @@ Rails.application.routes.draw do
     resources :registrations
     member do
     	get :start
-    	post :success
-    	post :failure
+      get :closed
+    end
+    resources :jobs, only: [] do
+      member do
+        post :success
+        post :failure
+      end
     end
   end
 end

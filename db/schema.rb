@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150629205849) do
+ActiveRecord::Schema.define(version: 20150701163231) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -59,11 +59,12 @@ ActiveRecord::Schema.define(version: 20150629205849) do
   add_index "groups_skills", ["group_id"], name: "index_groups_skills_on_group_id", using: :btree
   add_index "groups_skills", ["skill_id"], name: "index_groups_skills_on_skill_id", using: :btree
 
-  create_table "groups_users", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer  "group_id",   null: false
-    t.integer  "user_id",    null: false
+  create_table "jobs", force: :cascade do |t|
+    t.integer  "course_id"
+    t.boolean  "started",    default: false
+    t.boolean  "completed",  default: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
   end
 
   create_table "registrations", force: :cascade do |t|
@@ -74,6 +75,14 @@ ActiveRecord::Schema.define(version: 20150629205849) do
     t.integer  "course_id",   null: false
     t.integer  "user_id",     null: false
     t.string   "study_field"
+  end
+
+  create_table "results", force: :cascade do |t|
+    t.integer  "job_id"
+    t.integer  "group_id"
+    t.integer  "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "skill_scores", force: :cascade do |t|
@@ -121,8 +130,6 @@ ActiveRecord::Schema.define(version: 20150629205849) do
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
 
-  add_foreign_key "groups_users", "groups"
-  add_foreign_key "groups_users", "users"
   add_foreign_key "registrations", "courses"
   add_foreign_key "registrations", "users"
   add_foreign_key "skill_scores", "groups"
