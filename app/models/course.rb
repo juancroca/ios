@@ -54,8 +54,8 @@ class Course < ActiveRecord::Base
     job = self.jobs.build
     if job.save
       endpoints = {
-        success: "http://ruby#{Rails.application.routes.url_helpers.success_course_job_path(self, job)}",
-        failure: "http://ruby#{Rails.application.routes.url_helpers.failure_course_job_path(self, job)}"
+        success: Rails.application.routes.url_helpers.success_course_job_path(self, job),
+        failure: Rails.application.routes.url_helpers.failure_course_job_path(self, job)
       }
       hash = JSON.parse self.to_builder.target!
       hash[:courseId] = job.id
