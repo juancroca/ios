@@ -5,6 +5,10 @@ FactoryGirl.define do
     year {2000 + Random.rand(10)}
     sequence(:isis_id) { |n| n }
 
+    trait(:visible) do
+      visible(true)
+    end
+
     transient do
       supervisor_count 1
     end

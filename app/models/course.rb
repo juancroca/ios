@@ -59,6 +59,7 @@ class Course < ActiveRecord::Base
       }
       hash = JSON.parse self.to_builder.target!
       hash[:courseId] = job.id
+      hash[:jobId] = job.id
       hash.merge!({endpoints: endpoints})
       response = connection.post '/run', hash.to_json
       pp hash.to_json

@@ -1,5 +1,8 @@
 FactoryGirl.define do
   factory :registration do
+    friend_ids []
+    groups {{}}
+    skill_scores_attributes {{}}
     association :student
     association :course
 

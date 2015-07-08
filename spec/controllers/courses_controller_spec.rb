@@ -34,9 +34,9 @@ RSpec.describe CoursesController, type: :controller do
     end
 
     context "without session" do
-      it "gets redirected" do
+      it "renders 401" do
         get :edit, {:id => create(:course).to_param}
-        expect(response).to redirect_to(new_user_registration_path)
+        expect(response).to have_http_status(401)
       end
     end
 
@@ -67,16 +67,16 @@ RSpec.describe CoursesController, type: :controller do
 
     context "with student session" do
       login_student
-      it "gets redirected" do
+      it "renders 401" do
         get :edit, {:id => @course.to_param}
-        expect(response).to redirect_to(new_user_registration_path)
+        expect(response).to have_http_status(401)
       end
     end
 
     context "without session" do
-      it "gets redirected" do
+      it "renders 401" do
         get :edit, {:id => create(:course).to_param}
-        expect(response).to redirect_to(new_user_registration_path)
+        expect(response).to have_http_status(401)
       end
     end
   end
@@ -84,16 +84,16 @@ RSpec.describe CoursesController, type: :controller do
   describe "PUT #update" do
     context "with student session" do
       login_student
-      it "gets redirected" do
+      it "renders 401" do
         put :update, {:id => @course.to_param, :course => valid_attributes}
-        expect(response).to redirect_to(new_user_registration_path)
+        expect(response).to have_http_status(401)
       end
     end
 
     context "without session" do
-      it "gets redirected" do
+      it "renders 401" do
         put :update, {:id => create(:course).to_param, :course => valid_attributes}
-        expect(response).to redirect_to(new_user_registration_path)
+        expect(response).to have_http_status(401)
       end
     end
     context "with supervisor session" do

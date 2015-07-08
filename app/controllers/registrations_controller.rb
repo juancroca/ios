@@ -1,12 +1,13 @@
 class RegistrationsController < ApplicationController
-  before_filter :authenticate_student!, only: [:edit, :update, :new, :create]
-  before_action :set_registration, only: [:show, :edit, :update, :destroy]
-  before_action :set_course
+  before_filter :authenticate_student!, only: [:edit, :update, :new, :create, :show]
+  before_filter :authenticate_supervisor!, only: [:index]
+  before_action :set_registration, only: [:show, :edit, :update]
+  before_action :set_course, except:[:create, :edit]
 
   # GET /registrations
   # GET /registrations.json
   def index
-    @registrations = current_student.registrations.all
+    @registrations = @course.registrations.all
   end
 
   # GET /registrations/1
@@ -23,12 +24,14 @@ class RegistrationsController < ApplicationController
 
   # GET /registrations/1/edit
   def edit
+    @course = Course.visible.find(params[:course_id])
     render :result if @course.closed
   end
 
   # POST /registrations
   # POST /registrations.json
   def create
+    @course = Course.visible.find(params[:course_id])
     @registration = current_student.registrations.build(registration_params)
     @registration.course = @course
     respond_to do |format|
@@ -56,16 +59,6 @@ class RegistrationsController < ApplicationController
     end
   end
 
-  # DELETE /registrations/1
-  # DELETE /registrations/1.json
-  def destroy
-    @registration.destroy
-    respond_to do |format|
-      format.html { redirect_to registrations_url, notice: 'Registration was successfully destroyed.' }
-      format.json { head :no_content }
-    end
-  end
-
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_registration
@@ -73,13 +66,18 @@ class RegistrationsController < ApplicationController
     end
 
     def set_course
-      @course = Course.visible.find(params[:course_id])
+      if student_signed_in?
+        @course = current_student.attending.visible.find(params[:course_id])
+      end
+      if supervisor_signed_in?
+        @course = current_supervisor.supervising.find(params[:course_id])
+      end
       return redirect_to closed_course_path(@course) if @course.try(:closed?)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def registration_params
-      params.require(:registration).permit(:study_field, friend_ids: [], groups: params[:registration][:groups].try(:keys),
+      params.require(:registration).permit(:study_field, friend_ids: [], groups: params[:registration].try(:[], :gorups).try(:keys),
                                       skill_scores_attributes: [:id, :score, :skill_id])
     end
 end
