@@ -73,6 +73,7 @@ function ready() {
     el = $(this);
     el.siblings("input[type=hidden]").val("true")
     el.parents("tr").fadeOut('hide');
+    el.parents(".entry").fadeOut('hide');
     return false;
   });
   formHelpers();

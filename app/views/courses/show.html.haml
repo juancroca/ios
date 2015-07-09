@@ -1,5 +1,12 @@
 .container
   %p#notice= notice
+  - if not @course.closed
+    %h2
+      = @course.name
+
+    = link_to "Edit", edit_course_path(@course), :class => 'button'
+    = link_to "Start distribution", start_course_path(), :data => {:confirm => 'Running the assignment will close the enrollment. This action cannot be undone. Are you sure you want to start?'}, :class => 'button'
+
 
   - if @course.closed
     .row

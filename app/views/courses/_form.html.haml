@@ -75,38 +75,25 @@
         Students have to select their study from the list of mandatory studies, or select "Other" if their study is not a mandatory one.
 
   .row
-    .six.columns
-      Mandatory studies
+    .twelve.columns
+      %h4
+        Mandatory studies
   #studies
     - @course.study_fields.each do |study_field|
-      .row
+      .row.entry
         .six.columns
           %input{type: "text", name: "course[study_fields][]", id: "study_fields", style: "width: 100%", value: study_field}
         .six.columns
           = link_to "x", '#',{class: 'button btn-danger remove_fields'}
-      = link_to "Add Study Field", '#', {:'data-target' => '#studies', 'data-element' => '.row', class: ' add_fields button button-primary'}
-  %h4
-    Groups
+      = link_to "Add Study Field", '#', {:'data-target' => '#studies', 'data-element' => '.entry', class: ' add_fields button button-primary'}
+  
+  .row
+    .twelve.columns
+      %h4
+        Groups
   #groups
-    %table.u-full-width
-      %thead
-        %tr
-          %th
-            Name
-          %th
-            Min Size
-          %th
-            Max Size
-          %th
-            Description
-          %th
-            Skills
-          %th
-            Mandatory
-          %th
-      %tbody#groups
-        = f.fields_for :groups do |g_form|
-          = render partial: 'groups/form', locals: { f: g_form }
-  = link_to "Add Group", '#',{:'data-target' => 'tbody#groups', 'data-element' => 'tr', class: ' add_fields button button-primary'}
-  = f.submit 'Save'
-  = link_to "Start distribution", start_course_path(), :data => {:confirm => 'Running the assignment will close the enrollment. This action cannot be undone. Are you sure you want to start?'}, :class => 'button'
+    = f.fields_for :groups do |g_form|
+      = render partial: 'groups/form', locals: { f: g_form }
+  = link_to "Add Group", '#',{:'data-target' => '#groups', 'data-element' => '.entry', class: ' add_fields button button-primary'}
+  = f.submit "Save"
+  = link_to "Cancel", course_path(@course), :class => 'button'
