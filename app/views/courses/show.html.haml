@@ -1,12 +1,31 @@
 .container
-  %p#notice= notice
+
   - if not @course.closed
-    %h2
-      = @course.name
+    .row
+      .twelve.columns
+        %h2
+          = @course.name
 
-    = link_to "Edit", edit_course_path(@course), :class => 'button'
-    = link_to "Start distribution", start_course_path(), :data => {:confirm => 'Running the assignment will close the enrollment. This action cannot be undone. Are you sure you want to start?'}, :class => 'button'
+    .row
+      .six.columns
+        = "This course has #{@course.groups.length} groups and #{@course.students.length} currently registered students"
 
+    .row
+      .twelve.columns
+        = link_to "Edit", edit_course_path(@course), :class => 'button'
+        = link_to "Start distribution", start_course_path(), :data => {:confirm => 'Running the assignment will close the enrollment. This action cannot be undone. Are you sure you want to start?'}, :class => 'button'
+    .row
+      .six.columns
+        - if @course.students.active.empty
+          %h4
+            Registered students:
+            - @course.students.each_slice(2) do |someStudents|
+              .row
+                - someStudents.each do |student|
+                  .six.columns
+                    = "#{student.name} - #{student.email}"
+        - else
+          No students registered yet
 
   - if @course.closed
     .row

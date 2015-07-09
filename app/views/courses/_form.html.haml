@@ -82,7 +82,7 @@
     - @course.study_fields.each do |study_field|
       .row.entry
         .six.columns
-          %input{type: "text", name: "course[study_fields][]", id: "study_fields", style: "width: 100%", value: study_field}
+          %input{type: "text", name: "course[study_fields][]", id: "study_fields", style: "width: 100%", value: study_field, placeholder: "Study name (i.e. 'EIT - Digital Cloud Computing')"}
         .six.columns
           = link_to "x", '#',{class: 'button btn-danger remove_fields'}
       = link_to "Add Study Field", '#', {:'data-target' => '#studies', 'data-element' => '.entry', class: ' add_fields button button-primary'}
