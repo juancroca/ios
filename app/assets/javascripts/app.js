@@ -19,6 +19,7 @@ function ready() {
     var element = $(this).data("element");
     var new_table_row = $(target + ' ' + element + ':last').clone();
     var new_id = new Date().getTime() + (uniqueId++);
+
     new_table_row.find("input, select, textarea").each(function () {
       var el = $(this);
       el.prop("id", el.prop("id").replace(/\d+/, new_id));
@@ -65,12 +66,16 @@ function ready() {
     new_table_row.show();
     $(target).prepend(new_table_row);
     formHelpers();
+
+    return false; // prevent default click action from happening!
+    e.preventDefault(); // same thing as above
   })
 
   $('body').on('click', 'a.remove_fields', function() {
     el = $(this);
     el.siblings("input[type=hidden]").val("true")
     el.parents("tr").fadeOut('hide');
+    el.parents(".entry").fadeOut('hide');
     return false;
   });
   formHelpers();

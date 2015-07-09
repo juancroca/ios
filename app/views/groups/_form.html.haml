@@ -1,16 +1,20 @@
-%tr
-  %td
-    = f.text_field :name, class: "u-full-width"
-  %td
-    = f.number_field :minsize, class: "u-full-width"
-  %td
-    = f.number_field :maxsize, class: "u-full-width"
-  %td
-    = f.text_area :description, class: "u-full-width"
-  %td
-    = f.collection_select  :skill_ids, Skill.all, :id, :name, {}, {class: "skills", multiple: '', style: "width: 100%"}
-  %td
-    = f.check_box :mandatory
-  %td
-    = link_to "X", '#',{class: 'button btn-danger remove_fields'}
-    = f.hidden_field :_destroy
+.entry
+  .row
+    .six.columns
+      = f.text_field :name, class: "u-full-width", placeholder: "Group name"
+    .two.columns
+      = f.number_field :minsize, class: "u-full-width", placeholder: "Min. size"
+    .two.columns
+      = f.number_field :maxsize, class: "u-full-width", placeholder: "Max. size"
+    .two.columns
+      Must-keep
+      = f.check_box :mandatory
+  .row
+    .nine.columns
+      = f.text_area :description, class: "u-full-width", style: "width: 100%;", placeholder: "Group description"
+    .two.columns
+      = f.collection_select  :skill_ids, Skill.all, :id, :name, {}, {class: "skills", multiple: '', style: "width: 100%", 'data-placeholder': "Skills"}
+    .one.columns
+      = link_to "X", '#',{class: 'button btn-danger remove_fields'}
+      = f.hidden_field :_destroy
+  %hr
