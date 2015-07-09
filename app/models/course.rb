@@ -50,7 +50,7 @@ class Course < ActiveRecord::Base
     Jbuilder.new do |course|
       course.settings settings
       course.groups groups.map{|g| g.to_builder.attributes!}
-      course.students registrations.map{|s| s.to_builder.attributes!}
+      course.students registrations.active.map{|s| s.to_builder.attributes!}
     end
   end
 

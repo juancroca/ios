@@ -1,0 +1,7 @@
+- @registrations.each do |registration|
+  %p
+  = registration.student.name
+  - if registration.active
+    = button_to "Inactive", [@course, registration], params: {"[registration]active": false}, method: :patch
+  - else
+    = button_to "Active", [@course, registration], params:  {"[registration]active": true}, method: :patch

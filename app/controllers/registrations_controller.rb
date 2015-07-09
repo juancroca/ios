@@ -1,6 +1,7 @@
 class RegistrationsController < ApplicationController
-  before_filter :authenticate_student!, only: [:edit, :update, :new, :create, :show]
+  before_filter :authenticate_student!, only: [:edit, :new, :create, :show]
   before_filter :authenticate_supervisor!, only: [:index]
+  before_filter :authenticate_user!, only: [:update]
   before_action :set_registration, only: [:show, :edit, :update]
   before_action :set_course, except:[:create, :new]
 
@@ -50,10 +51,16 @@ class RegistrationsController < ApplicationController
   def update
     respond_to do |format|
       if @registration.update(registration_params)
-        format.html { redirect_to [@course, @registration], notice: 'Registration was successfully updated.' }
+        format.html do
+          redirect_to [@course, @registration], notice: 'Registration was successfully updated.' if student_signed_in?
+          redirect_to course_registrations_path(@course) if supervisor_signed_in?
+        end
         format.json { render :show, status: :ok, location: [@course, @registration] }
       else
-        format.html { render :edit }
+        format.html do
+           render :edit if student_signed_in?
+           redirect_to course_registrations_path(@course) if supervisor_signed_in?
+         end
         format.json { render json: @registration.errors, status: :unprocessable_entity }
       end
     end
@@ -62,7 +69,8 @@ class RegistrationsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_registration
-      @registration = current_student.registrations.find(params[:id])
+      @registration = current_student.registrations.find(params[:id]) if student_signed_in?
+      @registration = Registration.find(params[:id]) if supervisor_signed_in?
     end
 
     def set_course
@@ -77,7 +85,15 @@ class RegistrationsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def registration_params
-      params.require(:registration).permit(:study_field, :weight, friend_ids: [], groups: params[:registration].try(:[], :gorups).try(:keys),
+      if student_signed_in?
+        return params.require(:registration).permit(:study_field, :weight,
+                                      friend_ids: [],
+                                      groups: params[:registration].try(:[], :gorups).try(:keys),
                                       skill_scores_attributes: [:id, :score, :skill_id])
+      end
+      if supervisor_signed_in?
+        return params.require(:registration).permit(:active)
+      end
+      return {}
     end
 end

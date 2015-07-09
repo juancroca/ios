@@ -203,9 +203,29 @@ RSpec.describe RegistrationsController, type: :controller do
 
       context "with supervisor session" do
         login_supervisor
-        it "renders 401" do
-          put :update, {course_id: course, id: registration, registration: valid_attributes}
-          expect(response).to have_http_status(401)
+
+        context "with valid params" do
+          it "can't update student attributes" do
+            put :update, {course_id: supervisor_course, id: registration, registration: valid_attributes}
+            registration.reload
+            expect(registration.friend_ids).not_to eq(["1","2","3"])
+          end
+
+          it "updates the requested registration with supervisor attributes" do
+            put :update, {course_id: supervisor_course, id: registration, registration: {active: false}}
+            registration.reload
+            expect(registration.active).to eq(false)
+          end
+
+          it "assigns the requested registration as @registration" do
+            put :update, {course_id: supervisor_course, id: registration, registration: valid_attributes}
+            expect(assigns(:registration)).to eq(registration)
+          end
+
+          it "redirects to the registration" do
+            put :update, {course_id: supervisor_course, id: registration, registration: valid_attributes}
+            expect(response).to redirect_to course_registrations_path(supervisor_course)
+          end
         end
       end
 
@@ -219,6 +239,13 @@ RSpec.describe RegistrationsController, type: :controller do
       context "with student session" do
         login_student
         context "with valid params" do
+
+          it "can't update supervisor attributes" do
+            put :update, {course_id: student_course, id: registration, registration: {active: false}}
+            registration.reload
+            expect(registration.active).to eq(true)
+          end
+
           it "updates the requested registration" do
             put :update, {course_id: student_course, id: registration, registration: new_attributes}
             registration.reload
