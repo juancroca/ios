@@ -61,7 +61,7 @@ class Course < ActiveRecord::Base
       pp hash.to_json
       if response.status == 200
         self.update(closed: true)
-        job.update(started: true)
+        job.update(started: true, selected: true)
       end
     end
     return job

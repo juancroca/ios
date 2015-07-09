@@ -10,6 +10,7 @@ class Job < ActiveRecord::Base
   validate :registration_size
 
   scope :completed, -> {where(completed: true)}
+  scope :selected, -> {where(selected: true).first}
 
   after_save :unique_job_selected
 
@@ -27,8 +28,9 @@ class Job < ActiveRecord::Base
 
   def get_groups
     hash = JSON.parse self.course.to_builder.target!
-    hash[:courseId] = self.id
-    hash[:jobId] = self.id
+    hash[:courseId] = self.id #remove when json is updated
+    hash[:jobId] = self.id #remove when json is updated
+    hash[:id] = self.id
     endpoints = {
       success: Rails.application.routes.url_helpers.success_course_job_path(self.course, self),
       failure: Rails.application.routes.url_helpers.failure_course_job_path(self.course, self)
@@ -39,6 +41,7 @@ class Job < ActiveRecord::Base
 
   def update_groups
     hash = JSON.parse self.to_builder.target!
+    hash[:id] = self.id
     endpoints = {
       success: Rails.application.routes.url_helpers.success_course_job_path(self.course, self),
       failure: Rails.application.routes.url_helpers.failure_course_job_path(self.course, self)
