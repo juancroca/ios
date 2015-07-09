@@ -8,6 +8,7 @@ class Registration < ActiveRecord::Base
   serialize :groups, Hash
   serialize :friend_ids, Array
 
+  scope :active, -> {where(active: true)}
 
   def build_course_skill_scores
     if self.skill_scores.count == 0
