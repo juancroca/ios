@@ -2,7 +2,7 @@ class RegistrationsController < ApplicationController
   before_filter :authenticate_student!, only: [:edit, :update, :new, :create, :show]
   before_filter :authenticate_supervisor!, only: [:index]
   before_action :set_registration, only: [:show, :edit, :update]
-  before_action :set_course, except:[:create, :edit]
+  before_action :set_course, except:[:create, :new]
 
   # GET /registrations
   # GET /registrations.json
@@ -18,13 +18,13 @@ class RegistrationsController < ApplicationController
 
   # GET /registrations/new
   def new
+    @course = Course.visible.find(params[:course_id])
     @registration = current_student.registrations.build(course: @course)
     @registration.build_course_skill_scores
   end
 
   # GET /registrations/1/edit
   def edit
-    @course = Course.visible.find(params[:course_id])
     render :result if @course.closed
   end
 
@@ -77,7 +77,7 @@ class RegistrationsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def registration_params
-      params.require(:registration).permit(:study_field, friend_ids: [], groups: params[:registration].try(:[], :gorups).try(:keys),
+      params.require(:registration).permit(:study_field, :weight, friend_ids: [], groups: params[:registration].try(:[], :gorups).try(:keys),
                                       skill_scores_attributes: [:id, :score, :skill_id])
     end
 end

@@ -1,7 +1,9 @@
 function formHelpers(){
   $('.slider').on("change load mousemove", function() {
 		var target = $(this).data("target");
+    var targetInverse = $(this).data("target-inverse");
     $(target).html($(this).val());
+    $(targetInverse).html($(this).attr('max') - $(this).val());
   });
   $(".skills").chosen({
       disable_search_threshold: 10,

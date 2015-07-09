@@ -68,4 +68,16 @@
           %p
             Anyone missing? This list only shows students enrolled in this course. If your friends are missing from the list, you can check back later and add them.
 
+  -if @registration.course.preferences.groups && @registration.course.preferences.friends
+    .row
+      .nine.columns
+        Preferred topics
+        %span#weight-topics
+        = '%'
+      .three.columns
+        Preferred partners
+        %span#weight-parteners
+        = '%'
+      .twelve.columns
+        = f.range_field :weight, {min: 0, max: 100, class: 'slider', :'data-target' => "span#weight-parteners", :'data-target-inverse' => "span#weight-topics"}
   = f.submit 'Save'

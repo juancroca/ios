@@ -2,7 +2,11 @@ class Course < ActiveRecord::Base
   has_many :groups
   has_many :registrations
   has_many :supervisor_courses
-  has_many :students, through: :registrations
+  has_many :students, through: :registrations do
+    def active
+      where("registrations.active": true)
+    end
+  end
   has_many :supervisors, through: :supervisor_courses
   has_many :jobs
   has_and_belongs_to_many :skills
