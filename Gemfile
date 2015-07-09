@@ -27,6 +27,7 @@ gem 'client_side_validations', github: 'DavyJonesLocker/client_side_validations'
 gem 'migration_data'
 gem 'faraday'
 gem 'faraday_middleware'
+gem 'deep_cloneable'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
