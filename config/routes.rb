@@ -7,7 +7,7 @@ Rails.application.routes.draw do
     	get :start
       get :closed
     end
-    resources :jobs, only: [] do
+    resources :jobs, only: [:edit, :create] do
       member do
         post :success
         post :failure

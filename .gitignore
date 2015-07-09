@@ -19,3 +19,4 @@
 docker/caches/*
 
 config/database.yml
+/coverage

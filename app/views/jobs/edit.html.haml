@@ -1,0 +1,11 @@
+= form_for [@course, @job], validate: true do |f|
+  - group_name = ""
+  = f.fields_for :results do |r_form|
+    - if r_form.object.group.name != group_name
+    - group_name = r_form.object.group.name
+      %h3= group_name
+    .row
+      .six.columns
+        = r_form.hidden_field :group_id
+        = r_form.select :user_id, @course.students.collect {|s| [ s.name, s.id ] }, class: "u-full-width"
+  = f.submit 'Save'

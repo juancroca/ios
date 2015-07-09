@@ -53,34 +53,17 @@ class Course < ActiveRecord::Base
   def create_groups
     job = self.jobs.build
     if job.save
-      endpoints = {
-        success: Rails.application.routes.url_helpers.success_course_job_path(self, job),
-        failure: Rails.application.routes.url_helpers.failure_course_job_path(self, job)
-      }
-      hash = JSON.parse self.to_builder.target!
-      hash[:courseId] = job.id
-      hash[:jobId] = job.id
-      hash.merge!({endpoints: endpoints})
-      response = connection.post '/run', hash.to_json
+      response = job.get_groups
       pp hash.to_json
       if response.status == 200
         self.update(closed: true)
         job.update(started: true)
       end
-      return job
     end
     return job
   end
 
   private
-
-  def connection
-    conn = Faraday.new(url: "http://scala:8080") do |faraday|
-      faraday.headers['Content-Type'] = 'application/json'
-      faraday.adapter  Faraday.default_adapter  # make requests with Net::HTTP
-      faraday.request  :json
-    end
-  end
 
   def purge_study_fields
     self.study_fields.flatten!
