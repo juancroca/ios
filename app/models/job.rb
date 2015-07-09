@@ -11,6 +11,8 @@ class Job < ActiveRecord::Base
 
   scope :completed, -> {where(completed: true)}
 
+  after_save :unique_job_selected
+
   def registration_size
     errors.add(:base, "Registrations not enough for mandatory groups") if self.course.registrations.count < self.course.groups.mandatory.map(&:minsize).sum
   end
@@ -60,6 +62,10 @@ class Job < ActiveRecord::Base
       faraday.adapter  Faraday.default_adapter  # make requests with Net::HTTP
       faraday.request  :json
     end
+  end
+
+  def unique_job_selected
+    self.course.jobs.where(selected: true).where.not(id: self.id).update_all(selected: false) if self.selected
   end
 
 end
