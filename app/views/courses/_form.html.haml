@@ -65,23 +65,26 @@
             = @course.preferences.iterations
         = p_form.range_field :iterations, {min: 10, max: 200, class: 'slider', :'data-target' => 'span#iterationsVal'}
 
-  %h4
-    Mandatory Study Fields
+  .row
+    .twelve.columns
+      %h4
+        Mandatory Study Fields
+      %p
+        Please enter the names of all mandatory studies (students from these studies are guaranteed to have a spot). To add more than one mandatory study, click the "Add mandatory study" button.
+      %p
+        Students have to select their study from the list of mandatory studies, or select "Other" if their study is not a mandatory one.
+
+  .row
+    .six.columns
+      Mandatory studies
   #studies
-    %table.u-full-width
-      %thead
-        %tr
-          %th
-            Name
-          %th
-      %tbody#studies
-        - @course.study_fields.each do |study_field|
-          %tr
-            %td
-              %input{type: "text", name: "course[study_fields][]", id: "study_fields", style: "width: 100%", value: study_field}
-            %td
-              = link_to "X", '#',{class: 'button btn-danger remove_fields'}
-  = link_to "Add Study Field", '#',{:'data-target' => 'tbody#studies', 'data-element' => 'tr', class: ' add_fields button button-primary'}
+    - @course.study_fields.each do |study_field|
+      .row
+        .six.columns
+          %input{type: "text", name: "course[study_fields][]", id: "study_fields", style: "width: 100%", value: study_field}
+        .six.columns
+          = link_to "x", '#',{class: 'button btn-danger remove_fields'}
+      = link_to "Add Study Field", '#', {:'data-target' => '#studies', 'data-element' => '.row', class: ' add_fields button button-primary'}
   %h4
     Groups
   #groups
