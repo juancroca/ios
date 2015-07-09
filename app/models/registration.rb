@@ -25,6 +25,10 @@ class Registration < ActiveRecord::Base
     self.course.study_fields.include? self.study_field
   end
 
+  def weights_normalized
+    {friendsAndFoes: (weight/100.0), groupPreferences:((100.0 - weight)/100.0)}
+  end
+
   def to_builder
     Jbuilder.new do |registration|
       registration.id student.id
@@ -33,6 +37,7 @@ class Registration < ActiveRecord::Base
       registration.preferences course.preferences.groups ? groups_normalized : []
       registration.friends course.preferences.friends ? friend_ids : []
       registration.skills skill_scores.map{|ss| {"#{ss.skill.id}": ss.score}}
+      registration.weights weights_normalized
     end
   end
 end
