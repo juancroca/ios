@@ -6,6 +6,10 @@ class Course < ActiveRecord::Base
     def active
       where("registrations.active": true)
     end
+
+    def inactive
+      where("registrations.active": false)
+    end
   end
   has_many :supervisors, through: :supervisor_courses
   has_many :jobs

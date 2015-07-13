@@ -5,43 +5,77 @@
       .twelve.columns
         %h2
           = @course.name
-
     .row
       .six.columns
         = "This course has #{@course.groups.length} groups and #{@course.students.length} currently registered students"
 
     .row
       .twelve.columns
-        = link_to "Edit", edit_course_path(@course), :class => 'button'
-        = link_to "Start distribution", start_course_path(), :data => {:confirm => 'Running the assignment will close the enrollment. This action cannot be undone. Are you sure you want to start?'}, :class => 'button'
-    .row
-      .six.columns
-        - if @course.students.active.empty
-          %h4
-            Registered students:
-            - @course.students.each_slice(2) do |someStudents|
-              .row
-                - someStudents.each do |student|
-                  .six.columns
-                    = "#{student.name} - #{student.email}"
-        - else
-          No students registered yet
+        %h5 Settings:
+        %ul
+          - if @course.preferences.friends
+            %li Students can set preferred partners
+          - else
+            %li Students cannot set preferred partners
 
-  - if @course.closed
+          - if @course.preferences.diverse
+            %li The algorithm will try to create heterogeneous groups (students with good and poor skills will be mixed)
+          - else
+            %li The algorithm will try to create homogeneous groups (equally skilled students are grouped)
+
+          - if @course.preferences.compulsory
+            %li The algorithm will guarantee spots for the students that selected a mandatory study.
+          - else
+            %li The algorithm will not account for mandatory vs. non-mandatory studies.
+
+    .row
+      .twelve.columns
+        = link_to "Edit settings", edit_course_path(@course), :class => 'button'
+        = link_to "Start distribution", start_course_path(), :data => {:confirm => 'Running the assignment will close the enrollment. This action cannot be undone. Are you sure you want to start?'}, :class => 'button'
+    
+    - if not @course.students.active.empty?
+      .row
+        .twelve.columns
+          %h5
+            Registered students:
+      - @course.students.active.each_slice(2) do |pair|
+        .row
+          - pair.each do |student|
+            .six.columns
+              = "#{student.name} - #{student.email}"
+    - else
+      No students registered yet
+
+    - if not @course.students.inactive.empty?
+      .row
+        .twelve.columns
+          %h5
+            Unregistered students:
+          - @course.students.inactive.each_slice(2) do |pair|
+            .row
+              - pair.each do |student|
+                .six.columns
+                  = "#{student.name} - #{student.email}"
+
+  - else
     .row
       %h2
         Result of distribution
         - if supervisor_signed_in?
           - @jobs.each do |job|
-            %h4
-              Job #
-              = job.id
-            - job.groups.each do |group|
-              %h5= group.name
+            .row.twelve.columns
+              %h4
+                Job #
+                = job.id
+            - job.groups.each_slice(2) do |pair|
               .row
-                %ul
-                  - group.students.each do |student|
-                    %li= student.name
+                - pair.each do |group|
+                  .six.columns
+                    %h5
+                      = group.name
+                    %ul
+                      - group.students.each do |student|
+                        %li= student.name
         - if student_signed_in?
           %h5= @group.name
           .row

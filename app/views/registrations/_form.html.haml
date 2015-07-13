@@ -14,23 +14,27 @@
     .row
       %h5 Skills
       %p Please rank yourself on the following topics, 1 having no experience and 10 being very experienced
-      = f.fields_for :skill_scores do |ss_form|
-        .row
+    .row
+      .two.columns
+        Skills/rankings
+      - (1..10).each do |i|
+        .one.columns
+          = i
+    = f.fields_for :skill_scores do |ss_form|
+      .row
+        .two.columns
           = ss_form.hidden_field :skill_id
-          .one.column
-            = ss_form.object.skill.name
-          - (1..10).each do |i|
-            .one.column
-              = ss_form.label :score, i.to_s
-              = ss_form.radio_button :score, i
+          = ss_form.object.skill.name
+        - (1..10).each do |i|
+          .one.columns
+            = ss_form.radio_button :score, i
 
   - if @registration.course.preferences.compulsory
     %h5 Your study
     .row
       .twelve.columns
         = f.label :study_field
-        = f.select :study_field, options_for_select(@registration.course.study_fields), { include_blank: true }
-
+        = f.select :study_field, options_for_select(@registration.course.study_fields), { :include_blank => "Other" }
 
   -if @registration.course.preferences.groups
     %h5 Preferred topics
@@ -47,10 +51,6 @@
         .row
           .three.columns
             = p_form.range_field group.id, {min: 0, max: 10, class: 'slider', :'data-target' => "span#weight#{group.id}"}
-    .row
-      .twelve.columns
-        %p Please select each group exactly once
-
 
   -if @registration.course.preferences.friends
     %h5 Preferred partners

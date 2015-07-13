@@ -52,32 +52,29 @@
         %span.switch-handle
       %strong
         Compulsory attendance:
-      adds support for a group of students that must be assigned to a group (i.e. not the waitinglist).
+      adds support for a group of students that must be assigned to a group (i.e. not the waitinglist). Mandatory studies can be specified in the box below.
+
     .row
       .twelve.columns
-      %h5
-        Advanced options
-    .row
-      .four.columns
-        = p_form.label :iterations do |label|
-          = label.translation
-          %span#iterationsVal.slider-score
-            = @course.preferences.iterations
-        = p_form.range_field :iterations, {min: 10, max: 200, class: 'slider', :'data-target' => 'span#iterationsVal'}
+        %h5
+          Advanced options
+        These settings change the internal behaviour of the algorithm. Please see the documentation for details.
+      .row
+        .four.columns
+          = p_form.label :iterations do |label|
+            = label.translation
+            %span#iterationsVal.slider-score
+              = @course.preferences.iterations
+          = p_form.range_field :iterations, {min: 10, max: 200, class: 'slider', :'data-target' => 'span#iterationsVal'}
 
   .row
     .twelve.columns
       %h4
         Mandatory Study Fields
       %p
-        Please enter the names of all mandatory studies (students from these studies are guaranteed to have a spot). To add more than one mandatory study, click the "Add mandatory study" button.
+        Please enter the names of all mandatory studies (students from these studies are guaranteed to have a spot). To add more than one mandatory study, click the "Add study field" button.
       %p
         Students have to select their study from the list of mandatory studies, or select "Other" if their study is not a mandatory one.
-
-  .row
-    .twelve.columns
-      %h4
-        Mandatory studies
   #studies
     - @course.study_fields.each do |study_field|
       .row.entry
@@ -85,8 +82,8 @@
           %input{type: "text", name: "course[study_fields][]", id: "study_fields", style: "width: 100%", value: study_field, placeholder: "Study name (i.e. 'EIT - Digital Cloud Computing')"}
         .six.columns
           = link_to "x", '#',{class: 'button btn-danger remove_fields'}
-      = link_to "Add Study Field", '#', {:'data-target' => '#studies', 'data-element' => '.entry', class: ' add_fields button button-primary'}
-  
+    = link_to "Add Study Field", '#', {:'data-target' => '#studies', 'data-element' => '.entry', class: ' add_fields button button-primary'}
+
   .row
     .twelve.columns
       %h4
@@ -94,6 +91,7 @@
   #groups
     = f.fields_for :groups do |g_form|
       = render partial: 'groups/form', locals: { f: g_form }
+
   = link_to "Add Group", '#',{:'data-target' => '#groups', 'data-element' => '.entry', class: ' add_fields button button-primary'}
   = f.submit "Save"
   = link_to "Cancel", course_path(@course), :class => 'button'
