@@ -15,7 +15,7 @@ class CoursesController < ApplicationController
 
     if student_signed_in?
       load_student_course
-      @group = @course.jobs.last.groups.joins(:students).where("results_groups_join.user_id" => current_student.id).first unless @course.jobs.empty?
+      @group = @course.jobs.selected.groups.joins(:students).where("results_groups_join.user_id" => current_student.id).first unless @course.jobs.empty?
     end
 
   end

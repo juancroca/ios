@@ -24,6 +24,14 @@ class JobsController < ApplicationController
     end
   end
 
+  def update
+    if @job.update(job_params)
+      redirect_to @course
+    else
+      redirect_to @course, error: "Job not updated"
+    end
+  end
+
   def success
     begin
       @job.results.transaction do
@@ -54,7 +62,7 @@ class JobsController < ApplicationController
   end
 
   def job_params
-    params.require(:job).permit(results_attributes: [:user_id, :group_id])
+    params.require(:job).permit(:selected, results_attributes: [:user_id, :group_id])
   end
 
 end

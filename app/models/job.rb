@@ -10,6 +10,9 @@ class Job < ActiveRecord::Base
   validate :registration_size
 
   scope :completed, -> {where(completed: true)}
+  scope :selected, -> {where(selected: true).first}
+
+  after_save :unique_job_selected
 
   def registration_size
     errors.add(:base, "Registrations not enough for mandatory groups") if self.course.registrations.count < self.course.groups.mandatory.map(&:minsize).sum
@@ -25,8 +28,9 @@ class Job < ActiveRecord::Base
 
   def get_groups
     hash = JSON.parse self.course.to_builder.target!
-    hash[:courseId] = self.id
-    hash[:jobId] = self.id
+    hash[:courseId] = self.id #remove when json is updated
+    hash[:jobId] = self.id #remove when json is updated
+    hash[:id] = self.id
     endpoints = {
       success: Rails.application.routes.url_helpers.success_course_job_path(self.course, self),
       failure: Rails.application.routes.url_helpers.failure_course_job_path(self.course, self)
@@ -37,6 +41,7 @@ class Job < ActiveRecord::Base
 
   def update_groups
     hash = JSON.parse self.to_builder.target!
+    hash[:id] = self.id
     endpoints = {
       success: Rails.application.routes.url_helpers.success_course_job_path(self.course, self),
       failure: Rails.application.routes.url_helpers.failure_course_job_path(self.course, self)
@@ -60,6 +65,10 @@ class Job < ActiveRecord::Base
       faraday.adapter  Faraday.default_adapter  # make requests with Net::HTTP
       faraday.request  :json
     end
+  end
+
+  def unique_job_selected
+    self.course.jobs.where(selected: true).where.not(id: self.id).update_all(selected: false) if self.selected
   end
 
 end

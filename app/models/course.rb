@@ -54,7 +54,7 @@ class Course < ActiveRecord::Base
     Jbuilder.new do |course|
       course.settings settings
       course.groups groups.map{|g| g.to_builder.attributes!}
-      course.students registrations.map{|s| s.to_builder.attributes!}
+      course.students registrations.active.map{|s| s.to_builder.attributes!}
     end
   end
 
@@ -65,7 +65,7 @@ class Course < ActiveRecord::Base
       pp hash.to_json
       if response.status == 200
         self.update(closed: true)
-        job.update(started: true)
+        job.update(started: true, selected: true)
       end
     end
     return job
