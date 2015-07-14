@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  root to: 'static#root'
 
   devise_for :users, :controllers => { :registrations => "users/registrations" }
   resources :courses, only: [:show, :edit, :update] do
