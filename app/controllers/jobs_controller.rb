@@ -36,11 +36,16 @@ class JobsController < ApplicationController
     begin
       @job.results.transaction do
         params[:groupMap].each do |group_id, student_ids|
-          group = Group.find(group_id)
+          if group_id.to_i == -1
+            group = course.waiting_list
+          else
+            group = Group.find(group_id)
+          end
           student_ids.each do |student_id|
             @job.results.create!(user_id: student_id, group_id: group_id)
           end
         end
+        @job.update(completed: true, selected: true)
         head 200
       end
     rescue ActiveRecord::RecordInvalid

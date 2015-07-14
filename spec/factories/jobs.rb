@@ -1,5 +1,6 @@
 FactoryGirl.define do
   factory :job do
+    selected true
     transient do
       result_count 5
     end

@@ -1,5 +1,5 @@
 class Course < ActiveRecord::Base
-  has_many :groups
+  has_many :groups, -> {where(waiting_list: false)}
   has_many :registrations
   has_many :supervisor_courses
   has_many :students, through: :registrations do
@@ -24,6 +24,7 @@ class Course < ActiveRecord::Base
   validates :name, :semester, presence: true, on: :update
 
   before_save :purge_study_fields
+  before_create :build_waiting_list
 
   serialize :preferences, Hash
   serialize :study_fields, Array
@@ -33,6 +34,10 @@ class Course < ActiveRecord::Base
   scope :closed, -> {where(closed: true)}
 
   SEMESTER = %w(ss ws)
+
+  def waiting_list
+    self.groups.unscoped.find_by(waiting_list: true)
+  end
 
   def preferences
     OpenStruct.new(self[:preferences].as_json)
@@ -59,13 +64,13 @@ class Course < ActiveRecord::Base
   end
 
   def create_groups
+    self.update(closed: true)
     job = self.jobs.build
     if job.save
       response = job.get_groups
       pp hash.to_json
       if response.status == 200
-        self.update(closed: true)
-        job.update(started: true, selected: true)
+        job.update(started: true)
       end
     end
     return job
@@ -77,5 +82,9 @@ class Course < ActiveRecord::Base
     self.study_fields.flatten!
     self.study_fields.uniq!
     self.study_fields.delete("")
+  end
+
+  def build_waiting_list
+    self.groups.build(waiting_list: true, name: "Waiting List")
   end
 end

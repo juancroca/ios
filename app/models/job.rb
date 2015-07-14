@@ -26,6 +26,10 @@ class Job < ActiveRecord::Base
     completed
   end
 
+  def selected?
+    selected
+  end
+
   def get_groups
     hash = JSON.parse self.course.to_builder.target!
     hash[:courseId] = self.id #remove when json is updated
