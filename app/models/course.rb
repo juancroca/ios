@@ -68,7 +68,7 @@ class Course < ActiveRecord::Base
     job = self.jobs.build
     if job.save
       response = job.get_groups
-      pp hash.to_json
+      puts hash.to_json
       if response.status == 200
         job.update(started: true)
       end

@@ -59,7 +59,7 @@ class JobsController < ApplicationController
 
   private
   def load_course
-    @course = Course.visible.find(params[:course_id])
+    @course = Course.find(params[:course_id])
   end
 
   def load_job
