@@ -62,6 +62,10 @@ class Job < ActiveRecord::Base
     end
   end
 
+  def empty_result
+    self.results.map(&:user_id).include? nil
+  end
+
   private
   def connection
     conn = Faraday.new(url: "http://scala:8080") do |faraday|

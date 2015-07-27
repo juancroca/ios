@@ -16,6 +16,7 @@ class Group < ActiveRecord::Base
       group.maxSize maxsize
       group.skills skills.ids
       group.mandatory mandatory
+      group.waitingList waiting_list
     end
   end
 
