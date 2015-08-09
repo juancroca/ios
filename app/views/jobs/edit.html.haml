@@ -7,5 +7,8 @@
     .row
       .six.columns
         = r_form.hidden_field :group_id
-        = r_form.select :user_id, @course.students.collect {|s| [ s.name, s.id ] }, class: "u-full-width"
+        - if (registration = r_form.object.job.course.registrations.find_by(user_id: r_form.object.user_id)).active?
+          = r_form.select :user_id, @course.students.collect {|s| [ s.name, s.id ] }, { class: "u-full-width", include_blank: "None" }
+        - else
+          = r_form.select :user_id, @course.students.collect {|s| [ s.name, s.id ] }, { class: "u-full-width", include_blank: "None", selected: false }
   = f.submit 'Save'

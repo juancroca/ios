@@ -10,6 +10,10 @@ class Registration < ActiveRecord::Base
 
   scope :active, -> {where(active: true)}
 
+  def active?
+    active
+  end
+
   def build_course_skill_scores
     if self.skill_scores.count == 0
       (self.course.groups.map(&:skills).flatten + self.course.skills).uniq.each do |skill|

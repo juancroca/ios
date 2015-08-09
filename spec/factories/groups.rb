@@ -3,7 +3,7 @@ FactoryGirl.define do
     sequence(:name) { |n| "Group #{n}" }
     minsize 1
     maxsize 10
-    waitingList false
+    waiting_list false
     association :course
 
     trait :with_skills do

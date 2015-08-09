@@ -76,11 +76,11 @@ class RegistrationsController < ApplicationController
     def set_course
       if student_signed_in?
         @course = current_student.attending.visible.find(params[:course_id])
+        return redirect_to closed_course_path(@course) if @course.try(:closed?)
       end
       if supervisor_signed_in?
         @course = current_supervisor.supervising.find(params[:course_id])
       end
-      return redirect_to closed_course_path(@course) if @course.try(:closed?)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
@@ -95,5 +95,13 @@ class RegistrationsController < ApplicationController
         return params.require(:registration).permit(:active)
       end
       return {}
+    end
+
+    def render *args
+      if student_signed_in? && @course && @course.closed?
+        return redirect_to closed_course_path(@course)
+      else
+        super
+      end
     end
 end

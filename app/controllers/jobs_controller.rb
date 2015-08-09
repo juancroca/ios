@@ -12,7 +12,8 @@ class JobsController < ApplicationController
     begin
       Job.transaction do
         if @job.save
-          @job.update_groups
+          @job.reload
+          @job.update_groups @job.empty_result
           redirect_to @course
         else
           render :edit
@@ -35,12 +36,18 @@ class JobsController < ApplicationController
   def success
     begin
       @job.results.transaction do
+        @job.results.destroy_all
         params[:groupMap].each do |group_id, student_ids|
-          group = Group.find(group_id)
+          if group_id.to_i == -1
+            group = @course.waiting_list
+          else
+            group = @course.groups.find(group_id)
+          end
           student_ids.each do |student_id|
             @job.results.create!(user_id: student_id, group_id: group_id)
           end
         end
+        @job.update(completed: true, selected: true)
         head 200
       end
     rescue ActiveRecord::RecordInvalid
@@ -54,7 +61,7 @@ class JobsController < ApplicationController
 
   private
   def load_course
-    @course = Course.visible.find(params[:course_id])
+    @course = Course.find(params[:course_id])
   end
 
   def load_job

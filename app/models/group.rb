@@ -3,9 +3,9 @@ class Group < ActiveRecord::Base
   has_and_belongs_to_many :skills
   has_many :results
   has_many :students, ->{ uniq }, through: :results, class_name: "User", source: :user
-  validates :name, presence: true
-  validates :minsize, :maxsize, numericality: { only_integer: true, greater_than: 0}
-  validate :sizes_validation
+  validates :name, presence: true, unless: "waiting_list?"
+  validates :minsize, :maxsize, numericality: { only_integer: true, greater_than: 0}, unless: "waiting_list?"
+  validate :sizes_validation, unless: "waiting_list?"
 
   scope :mandatory, -> {where(mandatory: true)}
 
@@ -16,7 +16,12 @@ class Group < ActiveRecord::Base
       group.maxSize maxsize
       group.skills skills.ids
       group.mandatory mandatory
+      group.waitingList waiting_list
     end
+  end
+
+  def waiting_list?
+    waiting_list
   end
 
   private

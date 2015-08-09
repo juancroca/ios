@@ -28,7 +28,7 @@ RSpec.describe Users::RegistrationsController, type: :controller do
         login_supervisor
         it "should redirect to edit course" do
           post :create, valid_attributes
-          expect(response).to redirect_to(edit_course_path(assigns(:course)))
+          expect(response).to redirect_to(course_path(assigns(:course)))
         end
       end
 
@@ -98,7 +98,7 @@ RSpec.describe Users::RegistrationsController, type: :controller do
 
         it "redirects to the created course" do
           post :create, valid_attributes
-          expect(response).to redirect_to(edit_course_path(assigns(:course)))
+          expect(response).to redirect_to(course_path(assigns(:course)))
         end
       end
     end

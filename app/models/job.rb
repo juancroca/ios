@@ -26,6 +26,10 @@ class Job < ActiveRecord::Base
     completed
   end
 
+  def selected?
+    selected
+  end
+
   def get_groups
     hash = JSON.parse self.course.to_builder.target!
     hash[:courseId] = self.id #remove when json is updated
@@ -56,6 +60,10 @@ class Job < ActiveRecord::Base
       job.groups groups.map{|g| {g.id => g.students.ids}.to_json}
       job.course course.to_builder.attributes!
     end
+  end
+
+  def empty_result
+    self.results.map(&:user_id).include? nil
   end
 
   private
