@@ -37,7 +37,7 @@ class RegistrationsController < ApplicationController
     @registration.course = @course
     respond_to do |format|
       if @registration.save
-        format.html { redirect_to [@course, @registration], notice: 'Registration was successfully created.' }
+        format.html { redirect_to [@course, @registration], notice: 'You are now registered.' }
         format.json { render :show, status: :created, location: [@course, @registration] }
       else
         format.html { render :new }

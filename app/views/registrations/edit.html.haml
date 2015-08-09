@@ -1,11 +1,7 @@
 .container
   .row
     %h2
-      Enrollment for
-      = @registration.course.name
-      ,
-      = @registration.course.semester
-      = @registration.course.year
+      ="Enrollment for #{@registration.course.name}, #{@registration.course.semester} #{@registration.course.year}"
 
     -if @registration.course.description
       .row
