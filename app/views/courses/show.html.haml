@@ -42,7 +42,7 @@
                 - if (registration = student.registrations.find_by(course_id: @course)).active
                   = button_to "Unregister", [@course, registration], params: {"[registration]active": false}, method: :patch
                 - else
-                  = button_to "Activate", [@course, registration], params:  {"[registration]active": true}, method: :patch
+                  = button_to "Activate", [@course, registration], params: {"[registration]active": true}, method: :patch
 
     - else
       No students registered yet
@@ -51,29 +51,30 @@
     .row
       %h2
         Result of distribution
-        - if supervisor_signed_in?
-          - @jobs.each do |job|
-            .row.twelve.columns
-              %h4
-                Job #
-                = job.id
-              = button_to "Active", [@course, job], params:  {"[job]selected": true}, method: :patch unless job.selected?
-              = link_to "Edit", edit_course_job_path(@course, job)
-            - job.groups.each_slice(2) do |pair|
-              .row
-                - pair.each do |group|
-                  .six.columns
-                    %h5
-                      = group.name
-                    %ul
-                      - group.students.each do |student|
-                        %li= student.name
-        - if student_signed_in?
-          %h5= @group.name
-          .row
-            %ul
-              - @group.students.each do |student|
-                %li= student.name
+      - if supervisor_signed_in?
+        - @jobs.each do |job|
+          .row.twelve.columns
+            %h4
+              Job #
+              = job.id
+            = button_to "Active", [@course, job], params:  {"[job]selected": true}, method: :patch unless job.selected?
+            = link_to "Edit", edit_course_job_path(@course, job)
+          - job.groups.each_slice(2) do |pair|
+            .row
+              - pair.each do |group|
+                .six.columns
+                  %h5
+                    = group.name
+                  %ul
+                    - group.students.each do |student|
+                      %li
+                        = student.name
+      - if student_signed_in?
+        %h5= @group.name
+        .row
+          %ul
+            - @group.students.each do |student|
+              %li= student.name
   .row
     .twelve.columns
       = link_to "Edit settings", edit_course_path(@course), :class => 'button'
