@@ -69,6 +69,7 @@
                     - group.students.each do |student|
                       %li
                         = student.name
+            %hr
       - if student_signed_in?
         %h5= @group.name
         .row
