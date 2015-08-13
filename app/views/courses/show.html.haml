@@ -58,7 +58,7 @@
               Job #
               = job.id
           .row
-            .two.columns
+            .three.columns
               = button_to "Select as result", [@course, job], params:  {"[job]selected": true}, method: :patch unless job.selected?
             .two.columns
               = button_to "Edit", edit_course_job_path(@course, job)
