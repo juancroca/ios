@@ -57,8 +57,8 @@
             %h4
               Job #
               = job.id
-            = button_to "Active", [@course, job], params:  {"[job]selected": true}, method: :patch unless job.selected?
-            = link_to "Edit", edit_course_job_path(@course, job)
+            = button_to "Select as result", [@course, job], params:  {"[job]selected": true}, method: :patch unless job.selected?
+            = button_to "Edit", edit_course_job_path(@course, job)
           - job.groups.each_slice(2) do |pair|
             .row
               - pair.each do |group|
