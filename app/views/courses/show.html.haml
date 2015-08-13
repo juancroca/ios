@@ -28,7 +28,7 @@
             - else
               %li The algorithm will not account for mandatory vs. non-mandatory studies.
 
-    - if not @course.students.active.empty?
+    - if not @course.students.empty?
       .row
         .twelve.columns
           %h5
@@ -37,25 +37,15 @@
         .row
           - pair.each do |student|
             .six.columns
-              = "#{student.name} - #{student.email}"
-              - if (registration = student.registrations.find_by(course_id: @course)).active
-                = button_to "Inactive", [@course, registration], params: {"[registration]active": false}, method: :patch
-              - else
-                = button_to "Active", [@course, registration], params:  {"[registration]active": true}, method: :patch
+              %p
+                = "#{student.name} - #{student.email}"
+                - if (registration = student.registrations.find_by(course_id: @course)).active
+                  = button_to "Unregister", [@course, registration], params: {"[registration]active": false}, method: :patch
+                - else
+                  = button_to "Activate", [@course, registration], params:  {"[registration]active": true}, method: :patch
 
     - else
       No students registered yet
-
-    - if not @course.students.inactive.empty?
-      .row
-        .twelve.columns
-          %h5
-            Unregistered students:
-          - @course.students.inactive.each_slice(2) do |pair|
-            .row
-              - pair.each do |student|
-                .six.columns
-                  = "#{student.name} - #{student.email}"
 
   - if @course.closed
     .row

@@ -14,10 +14,10 @@
       %h4 How does it work
       %p The steps are as follows:
       %ol
-        %li Add GroupBy as an LTI tool on ISIS
-        %li Wait for students to sign up through ISIS
-        %li Set your preferences for how to distribute students
-        %li Let the algorithm do the hard word (i.e. click a button and wait a minute)
+        %li Add the GroupBy tool to ISIS
+        %li Configure the settings of the course (add groups, etc.)
+        %li Let the students sign up on ISIS and on this tool
+        %li Start the distribution! (1 click on a button)
 
   .row
     .twelve.columns
@@ -25,3 +25,15 @@
         For a walk-through of how to setup GroupBy for your course, please check the 
         = link_to("user manual", asset_path("usermanual.pdf"))
         (pdf).
+
+      %p
+        For a walk-through on installing GroupBy on your own server, we refer to the complete project description. You can find it
+        = link_to("here", asset_path("report.pdf"))
+        (pdf), in the deployment section. This document also contains a description of the algorithm we use for distributing students.
+
+      %p
+        This project is open-sourced in two parts, they can be found on GitHub
+        = link_to("here", "https://github.com/juancroca/ios")
+        and
+        = link_to("here", "https://github.com/joroKr21/IoS-Algorithm")
+        \.
