@@ -1,34 +1,33 @@
 .container
-  - if supervisor_signed_in?
-    - if not @course.closed
-      .row
-        .twelve.columns
-          %h2
-            = @course.name
-      .row
-        .six.columns
-          = "This course has #{@course.groups.length} groups and #{@course.students.length} currently registered students"
+  - if not @course.closed and supervisor_signed_in?
+    .row
+      .twelve.columns
+        %h2
+          = @course.name
+    .row
+      .six.columns
+        = "This course has #{@course.groups.length} groups and #{@course.students.length} currently registered students"
+    .row
+      .twelve.columns
+        %h5 Settings:
+        %ul
+          - if @course.preferences.friends
+            %li Students can set preferred partners
+          - else
+            %li Students cannot set preferred partners
 
-      .row
-        .twelve.columns
-          %h5 Settings:
-          %ul
-            - if @course.preferences.friends
-              %li Students can set preferred partners
-            - else
-              %li Students cannot set preferred partners
+          - if @course.preferences.diverse
+            %li The algorithm will try to create heterogeneous groups (students with good and poor skills will be mixed)
+          - else
+            %li The algorithm will try to create homogeneous groups (equally skilled students are grouped)
 
-            - if @course.preferences.diverse
-              %li The algorithm will try to create heterogeneous groups (students with good and poor skills will be mixed)
-            - else
-              %li The algorithm will try to create homogeneous groups (equally skilled students are grouped)
-
-            - if @course.preferences.compulsory
-              %li The algorithm will guarantee spots for the students that selected a mandatory study.
-            - else
-              %li The algorithm will not account for mandatory vs. non-mandatory studies.
-
-    - if not @course.students.empty?
+          - if @course.preferences.compulsory
+            %li The algorithm will guarantee spots for the students that selected a mandatory study.
+          - else
+            %li The algorithm will not account for mandatory vs. non-mandatory studies.
+    - if @course.students.active.empty?
+      No students registered yet
+    - else
       .row
         .twelve.columns
           %h5
@@ -43,43 +42,44 @@
                   = button_to "Unregister", [@course, registration], params: {"[registration]active": false}, method: :patch
                 - else
                   = button_to "Activate", [@course, registration], params: {"[registration]active": true}, method: :patch
-
-    - else
-      No students registered yet
-
+    .row
+      .twelve.columns
+        = link_to "Edit settings", edit_course_path(@course), :class => 'button'
+        = link_to "Start distribution", start_course_path(), :data => {:confirm => 'Running the assignment will close the enrollment. This action cannot be undone. Are you sure you want to start?'}, :class => 'button'
+        
   - if @course.closed
     .row
       %h2
         Result of distribution
-      - if supervisor_signed_in?
-        - @jobs.each do |job|
-          .row.twelve.columns
-            %h4
-              Job #
-              = job.id
-          .row
-            .three.columns
-              = button_to "Select as result", [@course, job], params:  {"[job]selected": true}, method: :patch unless job.selected?
-            .two.columns
-              = button_to "Edit", edit_course_job_path(@course, job)
-          - job.groups.each_slice(2) do |pair|
-            .row
-              - pair.each do |group|
-                .six.columns
-                  %h5
-                    = group.name
-                  %ul
-                    - group.students.each do |student|
-                      %li
-                        = student.name
-          %hr
-      - if student_signed_in?
-        %h5= @group.name
+    - if supervisor_signed_in?
+      - @jobs.each do |job|
+        .row.twelve.columns
+          %h4
+            Job #
+            = job.id
         .row
-          %ul
-            - @group.students.each do |student|
-              %li= student.name
-  .row
-    .twelve.columns
-      = link_to "Edit settings", edit_course_path(@course), :class => 'button'
-      = link_to "Start distribution", start_course_path(), :data => {:confirm => 'Running the assignment will close the enrollment. This action cannot be undone. Are you sure you want to start?'}, :class => 'button'
+          .three.columns
+            = button_to "Select as result", [@course, job], params:  {"[job]selected": true}, method: :patch unless job.selected?
+          .two.columns
+            = button_to "Edit", edit_course_job_path(@course, job)
+        - job.groups.each_slice(2) do |pair|
+          .row
+            - pair.each do |group|
+              .six.columns
+                %h5
+                  = group.name
+                %ul
+                  - group.students.each do |student|
+                    %li
+                      = student.name
+        %hr
+      .row
+        .twelve.columns
+          = link_to "Edit settings", edit_course_path(@course), :class => 'button'
+          = link_to "Start distribution", start_course_path(), :data => {:confirm => 'Running the assignment will close the enrollment. This action cannot be undone. Are you sure you want to start?'}, :class => 'button'
+    - if student_signed_in?
+      %h5= @group.name
+      .row
+        %ul
+          - @group.students.each do |student|
+            %li= student.name
