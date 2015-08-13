@@ -1,16 +1,19 @@
 # No need to change the database file: just take the latest Postgresql image
 db:
   image: postgres
+  #Internally expose port 5432 (invisible to outside world)
   expose:
     - "5432"
 # The algorithm node: rebuild from the recipe in the docker/scala folder
 scala:
   build: ./docker/scala
+  #Internally expose port 8080 (invisible to outside world)
   expose:
     - "8080"
 # The web container running our Ruby server
 # This is the only one with a port opened to the outside world!
 ruby:
+  # Use the Dockerfile in the project root
   build: .
   ports:
     - "80:80"

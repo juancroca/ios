@@ -1,6 +1,9 @@
 FROM lukasz/docker-scala
 
 WORKDIR /myapp
+
+# Clone the IoS scale repository into the current folder
 RUN ["git", "clone", "https://github.com/joroKr21/IoS-Algorithm.git", "."]
 
-CMD ["sbt", "run", "jetty"]
+# Run Spray
+CMD ["sbt", "run", "re-start"]
