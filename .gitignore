@@ -20,3 +20,13 @@ docker/caches/*
 
 config/database.yml
 /coverage
+
+# Ignore the useless LaTeX files
+*.aux
+*.hps
+*.synctex.*
+*.toc
+/report/*.log
+*.blg
+*.bbl
+*_minted-main/*
