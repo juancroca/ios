@@ -384,9 +384,11 @@ You now have a running instance. There is one problem left: the database is not 
 
 \begin{minted}[mathescape, linenos, numbersep=5pt, frame=lines, framesep=2mm, tabsize=4, numberblanklines=true, breaklines=true]{bash}
 # We first enter the running Ruby instance:
-$ docker exec -ti ios_db_1 bash
+$ docker exec -ti ios_ruby_1 bash
 
-# Execute the rake command to setup a clean database
+# Execute the rake command to create and setup a clean database
+$ export RAILS_ENV=production
+$ rake db:create
 $ rake db:schema:load
 \end{minted}
 
@@ -400,9 +402,16 @@ $ docker-compose up -d
 If you run this command while the old version is still running, the system will simply reboot the instance. You may experience a few seconds of downtime.
 
 \subsection{Resetting the system}
-The last two commands in the previous section (entering the container and the rake command) will set the database into a ready-to-use but empty state. This supposes the system is still running.
+Since loading the schema sets up empty tables, it is effectively a reset of the system. Thus, if you wish to reset the database, you can execute it again and all data will be gone. Please keep in mind that recovery is {\bf not} possible.
 
-If you wish to reset the database, you can execute them again and all data will be gone. Please keep in mind that recovery is {\bf not} possible.
+\begin{minted}[mathescape, linenos, numbersep=5pt, frame=lines, framesep=2mm, tabsize=4, numberblanklines=true, breaklines=true]{bash}
+# We first enter the running Ruby instance:
+$ docker exec -ti ios_ruby_1 bash
+
+# Execute the rake command to setup a clean database
+$ export RAILS_ENV=production
+$ rake db:schema:load
+\end{minted}
 
 \subsection{Stopping Docker}
 To stop docker, simply issue the following command:
