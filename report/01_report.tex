@@ -262,8 +262,8 @@ type Group {
     minSize: Int,
     maxSize: Int,
     mandatory: Boolean, // Optional, default false
-    name: String, 		// Optional
-    skills: Set[String]	// Optional
+    name: String,       // Optional
+    skills: Set[String] // Optional
 }
 \end{minted}
 
@@ -380,6 +380,30 @@ When issuing these commands, the latest versions of the server and algorithm are
 
 Notice that we pass a -d flag; this starts Compose in daemon mode, meaning that the process will continue after the current user has logged out.
 
+You now have a running instance. There is one problem left: the database is not setup yet. We can use Rake to setup everything for us:
+
+\begin{minted}[mathescape, linenos, numbersep=5pt, frame=lines, framesep=2mm, tabsize=4, numberblanklines=true, breaklines=true]{bash}
+# We first enter the running Ruby instance:
+$ docker exec -ti ios_db_1 bash
+
+# Execute the rake command to setup a clean database
+$ rake db:schema:load
+\end{minted}
+
+If, for some reason, you wish to do a restart with the existing data, just repeat the following command:
+
+\begin{minted}[mathescape, linenos, numbersep=5pt, frame=lines, framesep=2mm, tabsize=4, numberblanklines=true, breaklines=true]{bash}
+# Start the system
+$ docker-compose up -d
+\end{minted}
+
+If you run this command while the old version is still running, the system will simply reboot the instance. You may experience a few seconds of downtime.
+
+\subsection{Resetting the system}
+The last two commands in the previous section (entering the container and the rake command) will set the database into a ready-to-use but empty state. This supposes the system is still running.
+
+If you wish to reset the database, you can execute them again and all data will be gone. Please keep in mind that recovery is {\bf not} possible.
+
 \subsection{Stopping Docker}
 To stop docker, simply issue the following command:
 
@@ -387,7 +411,7 @@ To stop docker, simply issue the following command:
 $ docker-compose stop
 \end{minted}
 
-Note that this only works in the root directory of the project. Docker-compose requires the configuration files (docker-compose.yml and the Dockerfile files) to work, which it can’t find if these commands are issued from another folder.
+Note that this only works in the root directory of the project. Docker-compose requires the configuration files (docker-compose.yml and the Dockerfile files) to work, which it can't find if these commands are issued from another folder.
 
 \subsection{Deploying new versions}
 To fetch a new version of the server, we have to fetch and merge the new version from github:
@@ -423,11 +447,16 @@ We choose not to expose SSH ports on any of the hosts for security reasons. One 
 
 \begin{minted}[mathescape, linenos, numbersep=5pt, frame=lines, framesep=2mm, tabsize=4, numberblanklines=true, breaklines=true]{bash}
 # Using the CONTAINER ID of a container, we can get shell access
-$ docker exec -t -i e2361743cf36 /bin/bash
+$ docker exec -t -i addbed0b5a9a /bin/bash
 # just to prove we are now in the Docker container: who am i?
-root@e2361743cf36:/home/app/webapp# whoami
+root@addbed0b5a9a:/home/app/webapp# whoami
 root
-root@e2361743cf36:
+root@addbed0b5a9a:
+\end{minted}
+
+Alternatively, you could also use the name of the container (instead of the id):
+\begin{minted}[mathescape, linenos, numbersep=5pt, frame=lines, framesep=2mm, tabsize=4, numberblanklines=true, breaklines=true]{bash}
+$ docker exec -t -i ios_ruby_1 /bin/bash
 \end{minted}
 
 \subsubsection{Accessing Postgres through psql}
