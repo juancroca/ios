@@ -26,7 +26,7 @@ class Group < ActiveRecord::Base
 
   private
   def sizes_validation
-    errors.add(:maxsize, "needs to be bigger than minimum size")if minsize > maxsize
+    errors.add(:maxsize, "needs to be bigger than minimum size")if minsize && maxsize && (minsize > maxsize)
   end
 
 end

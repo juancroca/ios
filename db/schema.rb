@@ -43,8 +43,8 @@ ActiveRecord::Schema.define(version: 20150714150212) do
     t.string   "name"
     t.integer  "course_id",                    null: false
     t.string   "description"
-    t.integer  "minsize",      default: 0
-    t.integer  "maxsize",      default: 0
+    t.integer  "minsize"
+    t.integer  "maxsize"
     t.boolean  "waiting_list"
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
@@ -65,7 +65,7 @@ ActiveRecord::Schema.define(version: 20150714150212) do
     t.boolean  "completed",  default: false
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
-    t.boolean  "selected"
+    t.boolean  "selected",   default: false
   end
 
   create_table "registrations", force: :cascade do |t|
