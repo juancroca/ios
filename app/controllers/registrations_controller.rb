@@ -19,7 +19,7 @@ class RegistrationsController < ApplicationController
 
   # GET /registrations/new
   def new
-    @course = Course.visible.find(params[:course_id])
+    @course = Course.find(params[:course_id])
     @registration = current_student.registrations.build(course: @course)
     @registration.build_course_skill_scores
   end
@@ -32,7 +32,7 @@ class RegistrationsController < ApplicationController
   # POST /registrations
   # POST /registrations.json
   def create
-    @course = Course.visible.find(params[:course_id])
+    @course = Course.find(params[:course_id])
     @registration = current_student.registrations.build(registration_params)
     @registration.course = @course
     respond_to do |format|
@@ -75,7 +75,7 @@ class RegistrationsController < ApplicationController
 
     def set_course
       if student_signed_in?
-        @course = current_student.attending.visible.find(params[:course_id])
+        @course = current_student.attending.find(params[:course_id])
         return redirect_to closed_course_path(@course) if @course.try(:closed?)
       end
       if supervisor_signed_in?
