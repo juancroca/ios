@@ -2,7 +2,11 @@
 %p
   This form allows you to swap two students.
 %p
-  To swap two students, select both in one of the fields, and click "Save". The two students will then be swapped.
+  Here we can see all the students and how they are distributed in the groups and waiting list.
+%p
+  To swap the students search for one student on his current group and using the select box where his name is displayed assing the other desired student, then repeat this process for the other group.
+%p
+  An error will be return if their is one student who is in two different groups.
 
 = form_for [@course, @job], validate: true do |f|
   - group_name = ""
@@ -17,4 +21,4 @@
           = r_form.select :user_id, @course.students.collect {|s| [ s.name, s.id ] }, { class: "u-full-width", include_blank: "None" }
         - else
           = r_form.select :user_id, @course.students.collect {|s| [ s.name, s.id ] }, { class: "u-full-width", include_blank: "None", selected: false }
-  = f.submit 'Save'
+  = f.submit 'Re run distribution'

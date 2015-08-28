@@ -13,7 +13,7 @@ class JobsController < ApplicationController
       Job.transaction do
         if @job.save
           @job.reload
-          @job.update_groups @job.empty_result
+          @job.update_groups if @job.empty_result
           redirect_to @course
         else
           render :edit
@@ -44,7 +44,7 @@ class JobsController < ApplicationController
             group = @course.groups.find(group_id)
           end
           student_ids.each do |student_id|
-            @job.results.create!(user_id: student_id, group_id: group_id)
+            @job.results.create!(user_id: student_id, group_id: group.id)
           end
         end
         @job.update(completed: true, selected: true)

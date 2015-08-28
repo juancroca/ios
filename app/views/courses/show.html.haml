@@ -46,7 +46,7 @@
       .twelve.columns
         = link_to "Edit settings", edit_course_path(@course), :class => 'button'
         = link_to "Start distribution", start_course_path(), :data => {:confirm => 'Running the assignment will close the enrollment. This action cannot be undone. Are you sure you want to start?'}, :class => 'button'
-        
+
   - if @course.closed
     .row
       %h2
@@ -61,7 +61,7 @@
           .three.columns
             = button_to "Select as result", [@course, job], params:  {"[job]selected": true}, method: :patch unless job.selected?
           .two.columns
-            = button_to "Edit", edit_course_job_path(@course, job)
+            = button_to "Swap Students", edit_course_job_path(@course, job), method: :get
         - job.groups.each_slice(2) do |pair|
           .row
             - pair.each do |group|
@@ -75,6 +75,7 @@
         %hr
       .row
         .twelve.columns
+          = link_to "Edit registration", course_registrations_path(@course), :class => 'button'
           = link_to "Edit settings", edit_course_path(@course), :class => 'button'
           = link_to "Start distribution", start_course_path(), :data => {:confirm => 'Running the assignment will close the enrollment. This action cannot be undone. Are you sure you want to start?'}, :class => 'button'
     - if student_signed_in?

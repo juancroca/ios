@@ -45,19 +45,19 @@ class Job < ActiveRecord::Base
 
   def update_groups
     hash = JSON.parse self.to_builder.target!
-    hash[:id] = self.id
+    hash["course"][:id] = self.id
     endpoints = {
       success: Rails.application.routes.url_helpers.success_course_job_path(self.course, self),
       failure: Rails.application.routes.url_helpers.failure_course_job_path(self.course, self)
     }
-    hash.merge!({endpoints: endpoints})
-    connection.post '/run', hash.to_json
+    hash["course"].merge!({endpoints: endpoints})
+    response = connection.post '/swap', hash.to_json
   end
 
   def to_builder
     Jbuilder.new do |job|
       job.id id
-      job.groups groups.map{|g| {g.id => g.students.ids}.to_json}
+      job.groupMap self.groups.inject({}){|res, g| res.merge!({g.id => g.students.ids})}
       job.course course.to_builder.attributes!
     end
   end

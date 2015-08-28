@@ -1,10 +1,19 @@
 .container
+  %h1 Manage student registrations
+  %p
+    In this page you are able to manage the active status of a student, here is a list of all the registered students for this course.
+    You can check the student's status here and you will see a button to change their status, if they are active you can switch them to inactive and vice versa.
   .row
     .twelve.columns
       - @registrations.each do |registration|
         %p
         = registration.student.name
+        %p
+          %b
+            Status :
+            = registration.active ? "Active" : "Inactive"
         - if registration.active
-          = button_to "Inactive", [@course, registration], params: {"[registration]active": false}, method: :patch
+          = button_to "Make inactive", [@course, registration], params: {"[registration]active": false}, method: :patch
         - else
-          = button_to "Active", [@course, registration], params:  {"[registration]active": true}, method: :patch
+          = button_to "Make active", [@course, registration], params:  {"[registration]active": true}, method: :patch
+        %br
