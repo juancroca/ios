@@ -54,7 +54,7 @@ class Course < ActiveRecord::Base
   def to_builder
     settings = Jbuilder.new do |settings|
       settings.diverse preferences.diverse || false
-      settings.iterations preferences.iterations.to_i || 50
+      settings.iterations (preferences.iterations.to_i > 0 ? preferences.iterations.to_i : 50)
     end
     Jbuilder.new do |course|
       course.settings settings

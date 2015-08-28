@@ -13,7 +13,8 @@ class JobsController < ApplicationController
       Job.transaction do
         if @job.save
           @job.reload
-          @job.update_groups if @job.empty_result
+          score = @job.update_groups["score"]
+          flash[:notice] = "The score for that distribution would be: #{score}"
           redirect_to @course
         else
           render :edit
@@ -57,6 +58,7 @@ class JobsController < ApplicationController
 
   def failure
     puts params
+    head 200
   end
 
   private

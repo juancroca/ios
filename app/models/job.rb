@@ -51,7 +51,8 @@ class Job < ActiveRecord::Base
       failure: Rails.application.routes.url_helpers.failure_course_job_path(self.course, self)
     }
     hash["course"].merge!({endpoints: endpoints})
-    response = connection.post '/swap', hash.to_json
+    response = connection.post '/score', hash.to_json
+    JSON.parse(response.body)
   end
 
   def to_builder
