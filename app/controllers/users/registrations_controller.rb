@@ -13,6 +13,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
         c.name = params[:context_title]
       end
       session[:context_id] = params[:context_id]
+      session[:user_id] = params[:user_id]
       @course.supervisors << current_supervisor unless @course.supervisors.include? @user
       redirect_to course_path(@course)
     end
@@ -34,7 +35,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def require_no_authentication
     session[:init_ios] = true
-    if session[:context_id] != params[:context_id]
+    if (session[:context_id] != params[:context_id]) || (session[:user_id] != params[:user_id])
       sign_out current_user if current_user
       super
     end
