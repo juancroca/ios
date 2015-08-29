@@ -432,7 +432,7 @@ $ git fetch && git pull
 
 To run it, execute:
 \begin{minted}[mathescape, linenos, numbersep=5pt, frame=lines, framesep=2mm, tabsize=4, numberblanklines=true, breaklines=true]{bash}
-$ docker-compose build
+$ docker-compose build --no-cache
 $ docker-compose up
 \end{minted}
 
@@ -618,14 +618,16 @@ Analyzing all starting points in all the examples the chance to get the same opt
 
 To give a small back-of-the-envelope calculation: if there is a 10\% chance of a random run reaching the perfect solution (as can be seen in the table: 10\% is rather low: in our tests most ran way better) with a hundred starting points, the chance of reaching the perfect solution is\footnote{$1-(1-0.1)^{100}=0.9999734386$, which is about 99.997\%} 99.997\%...
 
+Our solution uses a hundred random starting points and picks the one that ended in the best solution. Thus, if one of the initial states leads to the optimal solution, we pick that optimal solution. We chose not to make the amount of starting points configurable, as we think estimating a good value is outside the capabilities of supervisors.
+
 \subsection{Local maxima}
-In another test, we verify that the Tabu Search algorithm always finds a local maximum of the objective function. Over 100 runs we test the algorithm with 1 starting point (to ensure the correctness of every run) and for every solution found, we traverse all possible moves down to a depth of 3 (i.e. any possible sequence of up to 3 consecutive moves). In all cases, the solution found by the Tabu Search algorithm scores the highest with respect to the objective function among its nearest neighbors in terms of moves. This is sufficient to show that the assignment process always finds a local optimum, however it’s impossible to guarantee that maximum is global without resorting to a brute force solution.
+In another test, we verify that the Tabu Search algorithm always finds a local maximum of the objective function. Over 100 runs we test the algorithm with 1 starting point (to ensure the correctness of every run) and for every solution found, we traverse all possible moves down to a depth of 3 (i.e. any possible sequence of up to 3 consecutive moves). In all cases, the solution found by the Tabu Search algorithm scores the highest with respect to the objective function among its nearest neighbors in terms of moves. This is sufficient to show that the assignment process always finds a local optimum, however it's impossible to guarantee that maximum is global without resorting to a brute force solution.
 
 \begin{figure}[H]
 	\caption{Example of local vs. global optimum}
 	\label{fig:local_global_optimum}
 	\centering
-	\includegraphics[width=8cm]{img/local_global_optimum}
+	\includegraphics[width=6cm]{img/local_global_optimum}
 \end{figure}
 
 \section{Group Work Evaluation}
