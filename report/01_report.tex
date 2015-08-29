@@ -61,7 +61,8 @@ The following list documents requirements we had during the implementation of th
 		\end{itemize}
 
 	\item Authentication is be done through ISIS, so all and only TU Berlin students can enroll.
-	\item The information must be confidential: only the student and possibly the supervisor can see a student's settings
+	\item The information must be confidential: only the student and possibly the supervisor can see a student's settings.
+	\item The algorithm must be tested to verify that it reaches a sufficiently optimal solution.
 \end{itemize}
 
 \section{Algorithm}
@@ -587,17 +588,45 @@ We agreed on the convention that in a pull-request to the master branch all test
 A problem we ran into, is that Travis only runs tests for one specific language. To be able to run tests both for Scala and for Ruby, we had to split the project into two separate git repositories, with two separate Travis test suites. This did have the consequence that although each might be working separately, the combination of the two might fail without us knowing. We found no solution for this, other than doing manual tests.
 
 \section{Result Evaluation}
-TODO
+To validate our results we implemented a brute force algorithm in order to find the maximum possible score for a specific distribution. As mentioned earlier as the number of students increases it quickly becomes infeasible to calculate the optimal distribution using brute force because of the really large number of possibilities. This means we can only test our algorithm against the brute force for a small set of students and try to draw conclusions from that. 
 
-TODO
+We generated 10 random examples where we try to assign between 10 and 12 students over 3 groups. Using trial and error we found that a set of 10-12 students is the maximum amount of students for which we can run the brute force algorithm. For every example we ran our algorithm with a 1000 random starting points. For every starting point we calculate the percentual difference between the result of our algorithm and the optimal value from the brute force algorithm. Note that 0\% means the optimal solution was reached.
 
-TODO
+The results of this are stated in the table below: 
 
-TODO
+\begin{center}
+    \begin{tabular}{|l|r|r|r|r|r|r|r|r|r|r|}
+        \hline
+        \multicolumn{11}{|c|}{Statistics} \\
+        \hline
+         round	& 1 		& 2 	  & 3 	    & 4 	 & 5	   & 6 	    & 7 	 & 8 	  & 9 		& 10 	 \\
+        \hline
+         mean 	& 3.90\%	& 0.00\%  & 0.00\%  & 0.00\% & 3.14\%  & 0.00\% & 0.00\% & 0.00\% & 14.23\% & 0.00\% \\
+         std 	& 10.68\%	& 0.00\%  & 0.00\%  & 0.00\% & 7.16\%  & 0.00\% & 0.00\% & 0.00\% & 8.87\%  & 0.00\% \\
+         min 	& 0.00\%	& 0.00\%  & 0.00\%  & 0.00\% & 0.00\%  & 0.00\% & 0.00\% & 0.00\% & 0.00\%  & 0.00\% \\
+         25\% 	& 0.00\%	& 0.00\%  & 0.00\%  & 0.00\% & 0.00\%  & 0.00\% & 0.00\% & 0.00\% & 12.42\% & 0.00\% \\
+         50\%	& 0.00\%	& 0.00\%  & 0.00\%  & 0.00\% & 0.00\%  & 0.00\% & 0.00\% & 0.00\% & 15.11\% & 0.00\% \\
+         75\%	& 0.00\%	& 0.00\%  & 0.00\%  & 0.00\% & 0.00\%  & 0.00\% & 0.00\% & 0.00\% & 25.18\% & 0.00\% \\
+         max 	& 34.80\%	& 0.00\%  & 0.00\%  & 0.00\% & 24.40\% & 0.00\% & 0.00\% & 0.00\% & 25.18\% & 0.00\% \\
+         \hline
+    \end{tabular}
+\end{center}
 
-TODO
+In all of them our algorithm got the same optimal result as the brute force in at least one of the 1000 different starting points (as can be seen in the min row). As seen in the max row the difference between the optimal result and the outcome of our algorithm from a starting point can be as much as 34.8\%. This shows the importance to run the algorithm from different starting points to avoid local optima.
 
-TODO
+Analyzing all starting points in all the examples the chance to get the same optimal result as the brute force from a random starting point is 89.18\%. This number will be lower if the number of student increases but still we believe a default of 100 starting points will give reasonable results. This number can be increased in our settings if needed, though.
+
+To give a small back-of-the-envelope calculation: if there is a 10\% chance of a random run reaching the perfect solution (as can be seen in the table: 10\% is rather low: in our tests most ran way better) with a hundred starting points, the chance of reaching the perfect solution is\footnote{$1-(1-0.1)^{100}=0.9999734386$, which is about 99.997\%} 99.997\%...
+
+\subsection{Local maxima}
+In another test, we verify that the Tabu Search algorithm always finds a local maximum of the objective function. Over 100 runs we test the algorithm with 1 starting point (to ensure the correctness of every run) and for every solution found, we traverse all possible moves down to a depth of 3 (i.e. any possible sequence of up to 3 consecutive moves). In all cases, the solution found by the Tabu Search algorithm scores the highest with respect to the objective function among its nearest neighbors in terms of moves. This is sufficient to show that the assignment process always finds a local optimum, however it’s impossible to guarantee that maximum is global without resorting to a brute force solution.
+
+\begin{figure}[H]
+	\caption{Example of local vs. global optimum}
+	\label{fig:local_global_optimum}
+	\centering
+	\includegraphics[width=8cm]{img/local_global_optimum}
+\end{figure}
 
 \section{Group Work Evaluation}
 The construction of the previously described app was not the only result expected for this course. There were other objectives like how the group is managed, how are obstacles tackled and how are decisions and compromises are made. It was undoubtedly a great learning experience, as you can see we did have some hiccups during the development of this solution. 
