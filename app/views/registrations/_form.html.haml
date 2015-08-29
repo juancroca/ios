@@ -10,7 +10,7 @@
 
 
 = form_for [@course, @registration], validate: true do |f|
-  -if @registration.course.skills
+  -if @registration.course.skills and @registration.course.preferences.skills
     .row
       %h5 Skills
       %p Please rank yourself on the following topics, 1 having no experience and 10 being very experienced

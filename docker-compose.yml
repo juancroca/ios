@@ -7,9 +7,9 @@ db:
 # The algorithm node: rebuild from the recipe in the docker/scala folder
 scala:
   build: ./docker/scala
-  #Internally expose port 8080 (invisible to outside world)
+  #Internally expose port 80 (invisible to outside world)
   expose:
-    - "8080"
+    - "80"
 # The web container running our Ruby server
 # This is the only one with a port opened to the outside world!
 ruby:

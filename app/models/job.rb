@@ -69,7 +69,7 @@ class Job < ActiveRecord::Base
 
   private
   def connection
-    conn = Faraday.new(url: "http://scala:8080") do |faraday|
+    conn = Faraday.new(url: "http://scala:80") do |faraday|
       faraday.headers['Content-Type'] = 'application/json'
       faraday.adapter  Faraday.default_adapter  # make requests with Net::HTTP
       faraday.request  :json

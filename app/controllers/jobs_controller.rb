@@ -44,8 +44,10 @@ class JobsController < ApplicationController
           else
             group = @course.groups.find(group_id)
           end
-          student_ids.each do |student_id|
-            @job.results.create!(user_id: student_id, group_id: group.id)
+          if not student_ids.nil?
+            student_ids.each do |student_id|
+              @job.results.create!(user_id: student_id, group_id: group.id)
+            end
           end
         end
         @job.update(completed: true, selected: true)
