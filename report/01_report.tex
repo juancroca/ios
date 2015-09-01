@@ -391,6 +391,7 @@ $ docker exec -ti ios_ruby_1 bash
 $ export RAILS_ENV=production
 $ rake db:create
 $ rake db:schema:load
+$ rake db:seed
 \end{minted}
 
 If, for some reason, you wish to do a restart with the existing data, just repeat the following command:
@@ -412,7 +413,51 @@ $ docker exec -ti ios_ruby_1 bash
 # Execute the rake command to setup a clean database
 $ export RAILS_ENV=production
 $ rake db:schema:load
+$ rake db:seed
 \end{minted}
+
+\subsection{Managing skills}
+Skills cannot be added or removed by regular users (including supervisors). Only admins can do this.
+
+During the setup of the system (specifically: during rake db:seed), the system adds all skills listed in db/skills.yml to the database. The default list contains the skills used by LinkedIn. Before deploying, you can replace or edit this list as you please.
+
+We will now describe how to add/remove skills in a running system:
+
+\subsubsection{Adding a skill}
+\begin{minted}[mathescape, linenos, numbersep=5pt, frame=lines, framesep=2mm, tabsize=4, numberblanklines=true, breaklines=true]{bash}
+$ docker exec -ti ios_ruby_1 bash
+$ export RAILS_ENV=production
+$ rails c
+> Skill.create(:name => "The name of the skill you want to add...")
+... some output
+> exit
+$
+\end{minted}
+
+\subsubsection{Removing a skill}
+\begin{minted}[mathescape, linenos, numbersep=5pt, frame=lines, framesep=2mm, tabsize=4, numberblanklines=true, breaklines=true]{bash}
+$ docker exec -ti ios_ruby_1 bash
+$ export RAILS_ENV=production
+$ rails c
+> Skill.find_by_name("Skill to be deleted").delete()
+... some output
+> exit
+$
+\end{minted}
+Note that the name of the skill has to be spelled correctly. If the system cannot find the name, it will give you an error but you can simply try again (with a different name).
+
+\subsubsection{Deleting all skills}
+\begin{minted}[mathescape, linenos, numbersep=5pt, frame=lines, framesep=2mm, tabsize=4, numberblanklines=true, breaklines=true]{bash}
+$ docker exec -ti ios_ruby_1 bash
+$ export RAILS_ENV=production
+$ rails c
+> Skill.delete_all
+ SQL (188.3ms)  DELETE FROM "skills"
+ => 5977 
+> exit
+$
+\end{minted}
+Note that doing this in a live system may have unintended side effects if someone already added the skill to a course.
 
 \subsection{Stopping Docker}
 To stop docker, simply issue the following command:
